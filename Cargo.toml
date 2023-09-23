@@ -1,0 +1,59 @@
+[package]
+name = "resonite"
+version = "0.0.0-alpha.0"
+edition = "2021"
+license = "MPL-2.0"
+authors = ["ljoonal"]
+description = "Resonite's API in rust"
+repository = "https://github.com/onlivfe/resonite_rs"
+documentation = "https://docs.rs/resonite"
+keywords = ["resonite", "neosvr", "api", "socialvr"]
+categories = ["api-bindings", "games"]
+
+include = ["src", "Cargo.toml", "LICENSE", "README.md"]
+
+[badges]
+maintenance = { status = "experimental" }
+
+[lib]
+name = "resonite"
+path = "src/lib.rs"
+
+[features]
+default = []
+api_client = ["tokio", "governor", "reqwest", "racal/reqwest", "async-trait"]
+
+# By default we allows deserializing some things partially even with errors.
+# Like skipping array entries with errors, which is not wanted for tests though.
+debug = []
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+#serde_with = { version = "3.3", features = ["json", "time_0_3"] }
+#serde_json = { version = "1" }
+#time = { version = "0.3", default-features = false, features = [
+#  "serde-well-known",
+#] }
+#strum = { version = "0.25", features = ["derive"] }
+
+# API client specifics
+racal = "0.3.3"
+#racal = { path = "../racal", features = ["reqwest"] }
+governor = { version = "0.6", optional = true }
+tokio = { version = "1", optional = true }
+async-trait = { version = "0.1", optional = true }
+
+[dependencies.reqwest]
+optional = true
+version = "0.11"
+default-features = false
+features = ["json", "rustls-tls"]
+
+[dev-dependencies]
+tokio-test = "0.4"
+tokio = { version = "1.27", features = ["rt", "macros"] }
+once_cell = "1.17"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "nightly"]

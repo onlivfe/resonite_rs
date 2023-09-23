@@ -1,0 +1,26 @@
+30
+Resonite
+ProtoFlux
+UUID
+Kofi
+RSA
+Patreon
+username
+logout
+etag
+IP
+UI
+VR
+pseudorandom
+cryptographically
+authenticator
+findable
+URI
+URL
+serde
+deserializer
+newtypes st:newtype is:plural
+enums st:enum is:plural
+RFC3339
+TOTP
+deserializing
