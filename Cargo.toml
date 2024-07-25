@@ -7,7 +7,7 @@ authors = ["ljoonal"]
 description = "Resonite's API in rust"
 repository = "https://github.com/onlivfe/resonite_rs"
 documentation = "https://docs.rs/resonite"
-keywords = ["resonite", "neosvr", "api", "socialvr"]
+keywords = ["resonite", "api", "socialvr"]
 categories = ["api-bindings", "games"]
 
 include = ["src", "Cargo.toml", "LICENSE", "README.md"]
@@ -18,6 +18,7 @@ maintenance = { status = "experimental" }
 [lib]
 name = "resonite"
 path = "src/lib.rs"
+crate-type = ["lib", "dylib"]
 
 [features]
 default = []
@@ -28,31 +29,31 @@ api_client = ["tokio", "governor", "reqwest", "racal/reqwest", "async-trait"]
 debug = []
 
 [dependencies]
-serde = { version = "1", features = ["derive"] }
-#serde_with = { version = "3.3", features = ["json", "time_0_3"] }
-#serde_json = { version = "1" }
-#time = { version = "0.3", default-features = false, features = [
-#  "serde-well-known",
-#] }
-#strum = { version = "0.25", features = ["derive"] }
+serde = { version = "1.0.204", features = ["derive"] }
+serde_with = { version = "3.9.0", features = ["json", "time_0_3"] }
+serde_json = { version = "1.0.120" }
+time = { version = "0.3.36", default-features = false, features = [
+  "serde-well-known",
+] }
+strum = { version = "0.26.3", features = ["derive"] }
 
 # API client specifics
-racal = "0.3.3"
+racal = "0.4.0"
 #racal = { path = "../racal", features = ["reqwest"] }
-governor = { version = "0.6", optional = true }
-tokio = { version = "1", optional = true }
-async-trait = { version = "0.1", optional = true }
+governor = { version = "0.6.3", optional = true }
+tokio = { version = "1.39.1", optional = true }
+async-trait = { version = "0.1.81", optional = true }
 
 [dependencies.reqwest]
 optional = true
-version = "0.11"
+version = "0.12.5"
 default-features = false
 features = ["json", "rustls-tls"]
 
 [dev-dependencies]
-tokio-test = "0.4"
-tokio = { version = "1.27", features = ["rt", "macros"] }
-once_cell = "1.17"
+tokio-test = "0.4.4"
+tokio = { version = "1.39.1", features = ["rt", "macros"] }
+once_cell = "1.19.0"
 
 [package.metadata.docs.rs]
 all-features = true

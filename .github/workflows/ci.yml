@@ -1,4 +1,4 @@
-on: # rebuild any PRs and main branch changes
+on:
   pull_request:
   push:
     branches:
@@ -17,91 +17,94 @@ jobs:
     # Prevent sudden announcement of a new advisory from failing ci:
     continue-on-error: ${{ matrix.checks == 'advisories' }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - uses: Swatinem/rust-cache@v2
     - uses: EmbarkStudios/cargo-deny-action@v1
       with:
         command: check ${{ matrix.checks }}
+
   lints:
     name: Lints
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
       - name: Install nightly toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
           toolchain: nightly
-          override: true
           components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: FMT
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --all-features -Z unstable-options --future-incompat-report -- -D warnings
 
-      - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-
-      - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all-features -Z unstable-options --future-incompat-report -- -D warnings
   test:
     name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
       - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
           toolchain: stable
-          override: true
+      - uses: Swatinem/rust-cache@v2
+      - name: Test
+        run: cargo test --all-features
 
-      - name: Run cargo test
-        uses: actions-rs/cargo@v1
-        continue-on-error: true  # WARNING: only for this example, remove it!
-        with:
-          command: test
-          args: --all-features
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --all-features
-  # bloat:
-  #   name: Bloat
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@master
-  #     - name: Install Rust
-  #       uses: actions-rs/toolchain@v1
-  #       with:
-  #         toolchain: stable
-  #     - name: Run cargo bloat
-  #       uses: orf/cargo-bloat-action@v1
-  #       with:
-  #         token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: Swatinem/rust-cache@v2
+      - name: Build
+        run: cargo build --all-features
 
-  # Credit to https://github.com/paritytech/smoldot/blob/main/.github/workflows/ci.yml
+  bloat:
+    name: Bloat
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Run cargo bloat
+        uses: orf/cargo-bloat-action@v1
+        continue-on-error: true
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
   spellcheck:
     name: Spellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - run: sudo apt-get update && sudo apt install -y libclang-dev  # Required by cargo-spellcheck
-    - uses: baptiste0928/cargo-install@v1  # This action ensures that the compilation is cached.
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
       with:
-        crate: cargo-spellcheck
-        version: 0.11.2
-    - run: cargo spellcheck -m 99
+        toolchain: stable
+    - name: Install cargo-spellcheck
+      uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-spellcheck
+    - name: Run spellcheck
+      run: cargo spellcheck --code 99
+
+  semver:
+    name: Semver check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Check semver
+        uses: obi1kenobi/cargo-semver-checks-action@v2

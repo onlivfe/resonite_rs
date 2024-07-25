@@ -23,6 +23,23 @@ Some of them also will require authentication.
 Sadly not all the things can even be reliably tested without creating a mock API.
 Which in turn defeats the purpose of the tests in the first place.
 
+### Generating auth token
+
+```sh
+curl --request POST \
+        --url https://api.resonite.com/userSessions \
+        --header 'Content-Type: application/json' \
+        --header 'Accept: application/json' \
+        --data '{
+    "password": "pa$$word",
+    "secretMachineId": "string",
+    "rememberMe": true,
+    "ownerId": "string",
+    "email": "user@example.com",
+    "username": "string"
+  }' > user-session.json
+```
+
 ### Running ignored tests
 
 Make sure that you've got:
