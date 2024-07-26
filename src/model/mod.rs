@@ -6,12 +6,12 @@
 // for easier navigation & better development experience.
 #![allow(clippy::module_name_repetitions)]
 
-mod record;
 mod db_asset;
+mod record;
 mod submission;
 mod user_session;
 
-pub use record::*;
 pub use db_asset::*;
+pub use record::*;
 pub use submission::*;
 pub use user_session::*;

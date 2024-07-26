@@ -91,8 +91,8 @@ impl AssetUrl {
 
 impl Display for AssetUrl {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-			write!(f, "{}", self.resolved_url())
-		}
+		write!(f, "{}", self.resolved_url())
+	}
 }
 
 impl<'de> serde::de::Deserialize<'de> for AssetUrl {
@@ -140,12 +140,14 @@ impl serde::ser::Serialize for AssetUrl {
 	}
 }
 
-
 #[cfg(test)]
 #[test]
 fn asset_url() {
 	let json_str = "\"resdb:///longhexadecimalstring.brson\"";
 	let asset_url = serde_json::from_str::<AssetUrl>(json_str).unwrap();
-	assert_eq!(&asset_url.to_string(), "https://assets.resonite.com/assets/longhexadecimalstring");
+	assert_eq!(
+		&asset_url.to_string(),
+		"https://assets.resonite.com/assets/longhexadecimalstring"
+	);
 	assert_eq!(&serde_json::to_string(&asset_url).unwrap(), json_str);
 }

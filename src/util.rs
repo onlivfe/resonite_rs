@@ -1,15 +1,27 @@
+//! Utilities to help with communicating with Resonite's API
+
 pub mod opt_rfc3339 {
 	//! Time serde for date time's RFC3339 where errors are converted to None.
 	#![allow(clippy::unnecessary_wraps)]
 	use serde::{Deserializer, Serializer};
 	use time::{serde::rfc3339, OffsetDateTime};
 
+	/// Deserializes data into an offset date time, ignoring errors
+	///
+	/// # Errors
+	///
+	/// Doesn't really, but serde signature requires it.
 	pub fn deserialize<'a, D: Deserializer<'a>>(
 		deserializer: D,
 	) -> Result<Option<OffsetDateTime>, D::Error> {
 		rfc3339::option::deserialize(deserializer).map_or_else(|_| Ok(None), Ok)
 	}
 
+	/// Serializes data into a possible offset date time
+	///
+	/// # Errors
+	///
+	/// If the underlying time crate's serializer errors
 	pub fn serialize<S: Serializer>(
 		option: &Option<OffsetDateTime>, serializer: S,
 	) -> Result<S::Ok, S::Error> {

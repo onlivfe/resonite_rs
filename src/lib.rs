@@ -18,7 +18,6 @@
 // My project my choice, tabs are literally made for indentation, spaces not.
 #![allow(clippy::tabs_in_doc_comments)]
 // Not much can be done about it :/
-
 #![allow(clippy::multiple_crate_versions)]
 
 /// The base path of the API
@@ -27,14 +26,11 @@ const API_BASE_URI: &str = "https://api.resonite.com";
 pub mod id;
 pub mod model;
 pub mod query;
+pub mod util;
 
 // The models are split into slightly smaller files in order to avoid a really
 // long single file.
 mod assets;
-
-// Models that should match up with Resonite' API's ones.
-
-mod util;
 
 // They are re-exported at the top level though to make importing them easier /
 // less confusing.

@@ -27,12 +27,29 @@ use governor::{
 	RateLimiter,
 };
 pub use racal::reqwest::{ApiClient, ApiError};
-use reqwest::{header::HeaderMap, Client, RequestBuilder};
+use reqwest::{
+	header::{HeaderMap, HeaderValue},
+	Client,
+	RequestBuilder,
+};
+use serde::{Deserialize, Serialize};
 
-use crate::query::{Authentication, NoAuthentication};
+use crate::query::{Authenticating, Authentication, NoAuthentication};
 
 type NormalRateLimiter =
 	RateLimiter<NotKeyed, InMemoryState, DefaultClock, NoOpMiddleware>;
+
+#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+/// Data needed to actually request an user session.
+///
+/// Mixes headers and actual body data together, not an actual Resonite model.
+pub struct UserSessionQueryWithHeaders {
+	/// The actual body of the request
+	pub body: crate::query::UserSession,
+	#[serde(flatten)]
+	/// Headers & so on needed for authentication requests
+	pub data: Authenticating,
+}
 
 #[must_use]
 fn http_rate_limiter() -> NormalRateLimiter {
@@ -62,6 +79,47 @@ impl ApiClient<NoAuthentication> for UnauthenticatedResonite {
 	) -> Result<RequestBuilder, racal::reqwest::ApiError> {
 		self.rate_limiter.until_ready().await;
 		Ok(req)
+	}
+}
+
+/// The main API client that's in the process of authentication
+///
+/// Created with a tuple of the unauthenticated client & authentication,
+/// and can always be downgraded into an unauthenticated client.
+pub struct AuthenticatingResonite {
+	base: UnauthenticatedResonite,
+	data: Authenticating,
+}
+
+impl From<(UnauthenticatedResonite, Authenticating)>
+	for AuthenticatingResonite
+{
+	fn from(value: (UnauthenticatedResonite, Authenticating)) -> Self {
+		Self { base: value.0, data: value.1 }
+	}
+}
+
+impl From<AuthenticatingResonite> for UnauthenticatedResonite {
+	fn from(value: AuthenticatingResonite) -> Self { value.base }
+}
+
+#[async_trait::async_trait]
+impl ApiClient<Authenticating> for AuthenticatingResonite {
+	fn state(&self) -> &Authenticating { &self.data }
+
+	fn client(&self) -> &reqwest::Client { &self.base.http }
+
+	async fn before_request(
+		&self, mut req: RequestBuilder,
+	) -> Result<RequestBuilder, racal::reqwest::ApiError> {
+		self.base.rate_limiter.until_ready().await;
+		req = req.header("UID", &self.data.unique_machine_identifier);
+		if let Some(second_factor_token) = &self.data.second_factor {
+			req = req.header("TOTP", second_factor_token);
+		}
+		
+
+		Ok(dbg!(req))
 	}
 }
 
@@ -97,14 +155,14 @@ impl AuthenticatedResonite {
 		let builder = Client::builder();
 		let mut headers = HeaderMap::new();
 
-		// headers.insert(
-		// 	"Authorization",
-		// 	("resonite ".to_owned() + auth.user_id.as_ref() + ":" + &auth.token)
-		// 		.parse()
-		// 		.map_err(|_| {
-		// 			serde_json::Error::custom("Couldn't turn auth into a header")
-		// 		})?,
-		// );
+		headers.insert(
+			"Authorization",
+			("res ".to_owned() + auth.user_id.as_ref() + ":" + &auth.token)
+				.parse()
+				.map_err(|_| {
+				serde_json::Error::custom("Couldn't turn auth into a header")
+			})?,
+		);
 
 		Ok(builder.user_agent(user_agent).default_headers(headers).build()?)
 	}
@@ -143,7 +201,17 @@ impl AuthenticatedResonite {
 impl UnauthenticatedResonite {
 	/// Creates an unauthenticated API client
 	fn http_client(user_agent: &str) -> Result<Client, ApiError> {
-		Ok(Client::builder().user_agent(user_agent).build()?)
+		let mut default_headers = HeaderMap::new();
+		default_headers.insert(
+			reqwest::header::ACCEPT,
+			HeaderValue::from_static("application/json"),
+		);
+		Ok(
+			Client::builder()
+				.user_agent(user_agent)
+				.default_headers(default_headers)
+				.build()?,
+		)
 	}
 
 	/// Adds authentication to the API client

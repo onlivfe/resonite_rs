@@ -26,7 +26,7 @@ pub struct UserSession {
 	pub secret_machine_id_hash: Option<String>,
 	/// Returned when creating a new session
 	pub secret_machine_id_salt: Option<String>,
-		/// Returned when creating a new session
+	/// Returned when creating a new session
 	pub uid_hash: Option<String>,
 	/// Returned when creating a new session
 	pub uid_salt: Option<String>,
@@ -36,12 +36,35 @@ pub struct UserSession {
 	pub is_machine_bound: bool,
 	/// Presumably an URL which can be used to log out
 	pub logout_url: String,
-	/// Presumably an URL which can be used to log out (only from client side?)
-	pub logout_url_client_side: String,
+	/// If the logout URL can be used client side.
+	///
+	/// False meaning can't be used by client to log out...?
+	pub logout_url_client_side: bool,
 	/// How the user session was originally created
 	pub original_login_type: UserSessionLoginType,
 	/// How many times the session has been used
-	pub session_login_counter: u64
+	pub session_login_counter: u64,
+}
+
+impl std::fmt::Debug for UserSession {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		f.debug_struct("UserSession")
+			.field("user_id", &self.user_id)
+			.field("token", &"*****")
+			.field("creation_time", &self.creation_time)
+			.field("expiration_time", &self.expiration_time)
+			.field("secret_machine_id_hash", &"*****")
+			.field("secret_machine_id_salt", &"*****")
+			.field("uid_hash", &"*****")
+			.field("uid_salt", &"*****")
+			.field("remember_me", &self.remember_me)
+			.field("is_machine_bound", &self.is_machine_bound)
+			.field("logout_url", &"*****")
+			.field("logout_url_client_side", &"*****")
+			.field("original_login_type", &self.original_login_type)
+			.field("session_login_counter", &self.session_login_counter)
+			.finish()
+	}
 }
 
 impl UserSession {
@@ -52,8 +75,7 @@ impl UserSession {
 	}
 }
 
-
-#[derive(Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 /// The login type for an user's (auth) session
 pub enum UserSessionLoginType {
 	#[serde(rename = "UNKNOWN")]
@@ -64,5 +86,35 @@ pub enum UserSessionLoginType {
 	/// The login was created with saml2
 	Saml2,
 	/// The login was created from a migration
-	Migration
+	Migration,
+}
+
+#[derive(Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+/// Config file data that's returned when requesting an user session
+pub struct ConfigFileData {
+	/// Supposedly path to where the config file should be stored
+	pub path: String,
+	/// Supposedly path to where the config file should be stored
+	pub content: String,
+}
+
+impl std::fmt::Debug for ConfigFileData {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		f.debug_struct("ConfigFileData")
+			.field("path", &self.path)
+			.field("content", &"*****")
+			.finish()
+	}
+}
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+/// Result from the API when requesting an user session
+pub struct UserSessionResult {
+	#[serde(rename = "entity")]
+	/// The user session, called `'entity'` in the API
+	pub user_session: UserSession,
+	/// The config files for the user session
+	pub config_files: Vec<ConfigFileData>,
 }

@@ -20,13 +20,16 @@ name = "resonite"
 path = "src/lib.rs"
 crate-type = ["lib", "dylib"]
 
+[[bin]]
+name = "auth-helper"
+path = "src/bin/auth-helper.rs"
+test = false
+bench = false
+
 [features]
 default = []
-api_client = ["tokio", "governor", "reqwest", "racal/reqwest", "async-trait"]
-
-# By default we allows deserializing some things partially even with errors.
-# Like skipping array entries with errors, which is not wanted for tests though.
-debug = []
+http_client = ["tokio", "governor", "reqwest", "racal/reqwest", "async-trait"]
+rand_util = ["nanorand"]
 
 [dependencies]
 serde = { version = "1.0.204", features = ["derive"] }
@@ -43,6 +46,8 @@ racal = "0.4.0"
 governor = { version = "0.6.3", optional = true }
 tokio = { version = "1.39.1", optional = true }
 async-trait = { version = "0.1.81", optional = true }
+
+nanorand = { version = "0.7.0", optional = true }
 
 [dependencies.reqwest]
 optional = true
