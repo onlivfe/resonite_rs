@@ -212,11 +212,11 @@ impl From<Machine> for Owner {
 }
 
 impl From<Owner> for Any {
-	fn from(id: Owner) -> Any {
+	fn from(id: Owner) -> Self {
 		match id {
-			Owner::User(v) => Any::User(v),
-			Owner::Group(v) => Any::Group(v),
-			Owner::Machine(v) => Any::Machine(v),
+			Owner::User(v) => Self::User(v),
+			Owner::Group(v) => Self::Group(v),
+			Owner::Machine(v) => Self::Machine(v),
 		}
 	}
 }

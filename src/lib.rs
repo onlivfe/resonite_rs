@@ -4,7 +4,7 @@
 //! Typed models for [Resonite's API](https://wiki.resonite.com) with serde support.
 //!
 //! Currently still missing a lot, as there's no official support or docs for
-//! the API. ```
+//! the API.
 
 #![cfg_attr(nightly, feature(doc_auto_cfg))]
 #![deny(clippy::all)]
