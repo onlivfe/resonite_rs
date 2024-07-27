@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-/// A generic Neos record, used for storage related things.
+/// A generic Resonite record, used for storage related things.
 pub struct RecordId {
 	#[serde(rename = "recordId")]
 	/// The ID of the record (`R-{uuid}` for example)

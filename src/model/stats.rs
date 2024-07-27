@@ -63,10 +63,10 @@ pub struct OnlineStatistics {
 	/// How many users are on in private sessions
 	pub private_session_user_count: u32,
 	#[serde(rename = "usersBySessionAccessLevel")]
-	/// How many of each user sesstion type there is
+	/// How many of each user session type there is
 	pub user_count_by_session_access_level: HashMap<SessionAccessLevel, u32>,
 	#[serde(rename = "usersByClientType")]
-	/// How many of each user sesstion type there is
+	/// How many of each user session type there is
 	pub user_count_by_client_type: HashMap<UserSessionType, u32>,
 }
 

@@ -21,7 +21,7 @@ pub use user_session::*;
 
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
-/// Even unauthenticated requests to Neos' API should take rate limits
+/// Even unauthenticated requests to Resonite's API should take rate limits
 /// into account, thus not using `()` for the API state.
 pub struct NoAuthentication {}
 
@@ -70,7 +70,7 @@ impl FromApiState<Self> for Authentication {
 /// Mixes headers and actual body data together, not an actual Resonite model.
 pub struct Authenticating {
 	#[serde(rename = "UID")]
-	/// UID header.
+	/// Unique identifier header.
 	///
 	/// Should be a SHA256 hash of the hardware.
 	/// Could be any SHA256, but API will treat this as a different device based
@@ -80,8 +80,8 @@ pub struct Authenticating {
 	/// TOTP header.
 	///
 	/// Usually should be composed of just a few numbers.
-	/// Only needed in some cases, with first requirement being having 2FA even
-	/// enabled for the account.
+	/// Only needed in some cases, with first requirement being having
+	/// second factor authentication even enabled for the account.
 	pub second_factor: Option<String>,
 }
 

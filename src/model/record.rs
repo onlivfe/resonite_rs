@@ -6,7 +6,7 @@ use time::{serde::rfc3339, OffsetDateTime};
 #[serde_with::serde_as]
 #[derive(Debug, PartialEq, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-/// A Neos record, used for all kinds of storage objects
+/// A Resonite record, used for all kinds of storage objects
 pub struct Record {
 	/// The id of the record
 	pub id: crate::id::Record,

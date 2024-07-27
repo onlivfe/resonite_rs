@@ -1,5 +1,6 @@
-30
+40
 Resonite
+Resonite's
 ProtoFlux
 UUID
 Kofi
@@ -24,3 +25,11 @@ enums st:enum is:plural
 RFC3339
 TOTP
 deserializing
+config
+saml2
+auth
+SHA256
+tuple
+serializer
+Deserializes
+Versioning

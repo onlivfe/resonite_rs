@@ -18,7 +18,7 @@ use serde::de::{self, Deserialize, Deserializer, Visitor};
 	strum::VariantNames,
 )]
 #[repr(u8)]
-/// A Neos session's access level.
+/// A Resonite session's access level.
 ///
 /// The API is inconsistent, sometimes representing this as a string and
 /// sometimes as a number.

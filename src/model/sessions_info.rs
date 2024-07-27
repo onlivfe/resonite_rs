@@ -7,7 +7,7 @@ use super::AssemblyInfo;
 	Debug, Clone, PartialEq, Eq, Hash, serde::Deserialize, serde::Serialize,
 )]
 #[serde(rename_all = "camelCase")]
-/// A Neos session.
+/// A Resonite session, often called an instance on other platforms.
 pub struct SessionInfo {
 	/// The name of the session
 	pub name: String,

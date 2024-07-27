@@ -2,7 +2,8 @@
 // Something's funky with checking if these are used or not.
 #![allow(dead_code)]
 
-use once_cell::sync::Lazy;
+use std::sync::LazyLock;
+
 use resonite::{
 	api_client::{AuthenticatedResonite, UnauthenticatedResonite},
 	model::UserSession,
@@ -22,7 +23,7 @@ pub fn api_no_auth() -> UnauthenticatedResonite {
 	UnauthenticatedResonite::new(USER_AGENT.to_string()).unwrap()
 }
 
-pub static USER_SESSION: Lazy<UserSession> = Lazy::new(|| {
+pub static USER_SESSION: LazyLock<UserSession> = LazyLock::new(|| {
 	let user_session: UserSession =
 		serde_json::from_slice(&std::fs::read("local/user-session.json").expect(
 			"must have a prepared `local/user-session.json` file for live API testing",

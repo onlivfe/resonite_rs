@@ -5,12 +5,12 @@ use time::{serde::rfc3339, OffsetDateTime};
 #[serde(rename_all = "camelCase")]
 /// An users (login/authorization) session.
 ///
-/// Not to be confused with a Neos session that's "an instance of a world".
+/// Not to be confused with a Resonite session that's "an instance of a world".
 /// This is the response to logging in for example.
 ///
 /// The response from the API at POST `userSessions`.
 pub struct UserSession {
-	/// The Neos user that this session is for
+	/// The Resonite user that this session is for
 	pub user_id: crate::id::User,
 	/// The secret token of this session
 	pub token: String,

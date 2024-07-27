@@ -67,7 +67,7 @@ impl From<UserSessionPasswordAuthentication> for UserSessionAuthentication {
 	strum::VariantNames,
 )]
 #[serde(rename_all = "camelCase")]
-/// An identifier to use when requesting a session from the Neos API.
+/// An identifier to use when requesting a session from the Resonite API.
 ///
 /// Used when logging in for example in
 /// [`LoginCredentials`](LoginCredentials::identifier).

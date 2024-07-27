@@ -3,7 +3,7 @@ use time::{serde::rfc3339, OffsetDateTime};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-/// A Neos record's submission to a group
+/// A Resonite record's submission to a group
 pub struct Submission {
 	// TODO: Unique ID newtype
 	/// The id of the submission

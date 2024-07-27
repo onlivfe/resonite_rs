@@ -1,10 +1,10 @@
 #![doc(
 	html_logo_url = "https://github.com/onlivfe/resonite_rs/raw/main/logo.png"
 )]
-//! WIP: Typed models for [Resonite's API](https://wiki.resonite.com) with serde support.
+//! Typed models for [Resonite's API](https://wiki.resonite.com) with serde support.
 //!
-//! Currently very WIP since Resonite isn't public as of writing.
-//! ```
+//! Currently still missing a lot, as there's no official support or docs for
+//! the API. ```
 
 #![cfg_attr(nightly, feature(doc_auto_cfg))]
 #![deny(clippy::all)]
