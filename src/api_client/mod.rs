@@ -5,7 +5,7 @@
 //! trait. Though this does additionally support unwrapping the message/data of
 //! the `Resonite` API responses.
 //!
-//! If you're implementing your own API client, you need to implement two
+//! If you're implementing your own API client, you need to implement three
 //! possible API states:
 //!
 //! 1. [`resonite::query::NoAuthentication`](crate::query::NoAuthentication)
@@ -13,7 +13,13 @@
 //! > Doesn't require authentication but still needs to be rate limited
 //! > properly.
 //!
-//! 2. [`resonite::model::UserSession`](crate::model::UserSession)
+//! 2.[`resonite::query::Authenticating`](crate::query::Authenticating)
+//!
+//! > Almost a sub-state of not having authentication,
+//! > but requires `UID` & `TOTP` headers to be send.
+//! > Used for logging in.
+//!
+//! 3. [`resonite::query::Authentication`](crate::query::Authentication)
 //!
 //! > Requires the `Authorization` header in addition to the rate limiting.
 
