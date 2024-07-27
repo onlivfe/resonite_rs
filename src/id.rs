@@ -151,6 +151,20 @@ pub enum Any {
 	Machine(Machine),
 }
 
+impl AsRef<str> for Any {
+	/// Extracts a string slice containing the entire inner String.
+	#[must_use]
+	fn as_ref(&self) -> &str {
+		match self {
+			Self::User(v) => &v.0,
+			Self::Group(v) => &v.0,
+			Self::Session(v) => &v.0,
+			Self::Record(v) => &v.0,
+			Self::Machine(v) => &v.0,
+		}
+	}
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(untagged)]
 /// Resonite IDs that can own records for example
@@ -173,10 +187,36 @@ pub enum Owner {
 	Machine(Machine),
 }
 
+impl AsRef<str> for Owner {
+	/// Extracts a string slice containing the entire inner String.
+	#[must_use]
+	fn as_ref(&self) -> &str {
+		match self {
+			Self::User(v) => &v.0,
+			Self::Group(v) => &v.0,
+			Self::Machine(v) => &v.0,
+		}
+	}
+}
+
 impl From<User> for Owner {
 	fn from(user: User) -> Self { Self::User(user) }
 }
 
 impl From<Group> for Owner {
 	fn from(group: Group) -> Self { Self::Group(group) }
+}
+
+impl From<Machine> for Owner {
+	fn from(machine: Machine) -> Self { Self::Machine(machine) }
+}
+
+impl From<Owner> for Any {
+	fn from(id: Owner) -> Any {
+		match id {
+			Owner::User(v) => Any::User(v),
+			Owner::Group(v) => Any::Group(v),
+			Owner::Machine(v) => Any::Machine(v),
+		}
+	}
 }

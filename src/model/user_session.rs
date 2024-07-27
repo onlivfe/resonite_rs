@@ -36,7 +36,7 @@ pub struct UserSession {
 	pub is_machine_bound: bool,
 	#[serde(default)]
 	/// Presumably an URL which can be used to log out
-	/// 
+	///
 	/// Defaulted to an empty string if missing
 	pub logout_url: String,
 	/// If the logout URL can be used client side.
@@ -78,7 +78,20 @@ impl UserSession {
 	}
 }
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
+#[derive(
+	Debug,
+	Clone,
+	PartialEq,
+	Eq,
+	Hash,
+	Serialize,
+	Deserialize,
+	strum::FromRepr,
+	strum::Display,
+	strum::EnumString,
+	strum::AsRefStr,
+	strum::VariantNames,
+)]
 /// The login type for an user's (auth) session
 pub enum UserSessionLoginType {
 	#[serde(rename = "UNKNOWN")]
@@ -120,4 +133,32 @@ pub struct UserSessionResult {
 	pub user_session: UserSession,
 	/// The config files for the user session
 	pub config_files: Vec<ConfigFileData>,
+}
+
+#[derive(
+	Debug,
+	Clone,
+	PartialEq,
+	Eq,
+	Hash,
+	Serialize,
+	Deserialize,
+	strum::FromRepr,
+	strum::Display,
+	strum::EnumString,
+	strum::AsRefStr,
+	strum::VariantNames,
+)]
+///Type of the user session
+pub enum UserSessionType {
+	/// Unknown user session type
+	Unknown,
+	/// Standard game client
+	GraphicalClient,
+	/// Special chat client
+	ChatClient,
+	/// Host of sessions
+	Headless,
+	/// Automated agent
+	Bot,
 }

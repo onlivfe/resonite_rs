@@ -21,7 +21,6 @@ const USER_AGENT: &str = concat!(
 fn main() {
 	// We really don't need to care about multithreading for this simple tool
 
-use resonite::query::{Authenticating};
 	let rt = tokio::runtime::Builder::new_current_thread()
 		.enable_all()
 		.build()
@@ -29,7 +28,6 @@ use resonite::query::{Authenticating};
 
 	let user_session_file = File::create("local/user-session.json")
 		.expect("Creating local/user-session.json file to work");
-	
 
 	println!(
 		"This is a very simple helper tool to generate a `user-session.json` file for running the integration tests."
@@ -140,7 +138,7 @@ use resonite::query::{Authenticating};
 				recovery_code: None,
 			},
 		),
-		username,
+		identifier: resonite::query::LoginCredentialsIdentifier::Username(username),
 	};
 
 	// Execute the future, blocking the current thread until completion
@@ -152,7 +150,7 @@ use resonite::query::{Authenticating};
 	println!("Login successful");
 	serde_json::to_writer_pretty(user_session_file, &user_session.user_session)
 		.expect("Writing user session to work");
-	
+
 	println!(
 		"Dumping config files not implemented, received: {:?}",
 		user_session.config_files

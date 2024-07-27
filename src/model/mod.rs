@@ -6,12 +6,26 @@
 // for easier navigation & better development experience.
 #![allow(clippy::module_name_repetitions)]
 
+mod assembly_info;
 mod db_asset;
+mod output_device;
 mod record;
+mod record_id;
+mod session_access_level;
+mod session_user;
+mod sessions_info;
+mod stats;
 mod submission;
 mod user_session;
 
+pub use assembly_info::*;
 pub use db_asset::*;
+pub use output_device::*;
 pub use record::*;
+pub use record_id::*;
+pub use session_access_level::*;
+pub use session_user::*;
+pub use sessions_info::*;
+pub use stats::*;
 pub use submission::*;
 pub use user_session::*;

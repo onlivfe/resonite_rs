@@ -4,11 +4,7 @@
 
 use once_cell::sync::Lazy;
 use resonite::{
-	api_client::{
-		AuthenticatedResonite,
-		UnauthenticatedResonite,
-		UserSessionQueryWithHeaders,
-	},
+	api_client::{AuthenticatedResonite, UnauthenticatedResonite},
 	model::UserSession,
 	query::Authentication,
 };

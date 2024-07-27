@@ -1,9 +1,9 @@
 use racal::Queryable;
 use serde::{Deserialize, Serialize};
 
-use super::Authenticating;
+use super::{Authenticating, Authentication};
 
-#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Authentication using a password for an user session
 pub struct UserSessionPasswordAuthentication {
@@ -14,7 +14,7 @@ pub struct UserSessionPasswordAuthentication {
 	pub recovery_code: Option<String>,
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Authentication using a session token for an user session
 pub struct UserSessionTokenAuthentication {
@@ -22,7 +22,17 @@ pub struct UserSessionTokenAuthentication {
 	pub session_token: String,
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+#[derive(
+	Debug,
+	Clone,
+	PartialEq,
+	Eq,
+	Hash,
+	Serialize,
+	Deserialize,
+	strum::AsRefStr,
+	strum::VariantNames,
+)]
 #[serde(tag = "$type")]
 #[serde(rename_all = "camelCase")]
 /// Authentication for an user session query with any kind of auth
@@ -45,12 +55,69 @@ impl From<UserSessionPasswordAuthentication> for UserSessionAuthentication {
 	}
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+#[derive(
+	Debug,
+	Clone,
+	PartialEq,
+	Eq,
+	Hash,
+	Serialize,
+	Deserialize,
+	strum::AsRefStr,
+	strum::VariantNames,
+)]
+#[serde(rename_all = "camelCase")]
+/// An identifier to use when requesting a session from the Neos API.
+///
+/// Used when logging in for example in
+/// [`LoginCredentials`](LoginCredentials::identifier).
+pub enum LoginCredentialsIdentifier {
+	/// Identify using the username
+	Username(String),
+	#[serde(rename = "ownerID")]
+	/// Identify using the user's ID
+	OwnerID(String),
+	/// Identify using an email address
+	Email(String),
+}
+
+impl LoginCredentialsIdentifier {
+	#[must_use]
+	/// Gets the inner string
+	pub const fn inner(&self) -> &String {
+		match self {
+			Self::Username(s) | Self::Email(s) | Self::OwnerID(s) => s,
+		}
+	}
+
+	#[must_use]
+	/// Gets the inner string
+	pub fn inner_mut(&mut self) -> &mut String {
+		match self {
+			Self::Username(s) | Self::Email(s) | Self::OwnerID(s) => s,
+		}
+	}
+
+	#[must_use]
+	/// If is username
+	pub const fn is_username(&self) -> bool { matches!(self, Self::Username(_)) }
+
+	#[must_use]
+	/// If is email based
+	pub const fn is_email(&self) -> bool { matches!(self, Self::Email(_)) }
+
+	#[must_use]
+	/// If is owner's ID based
+	pub const fn is_ownerid(&self) -> bool { matches!(self, Self::OwnerID(_)) }
+}
+
+#[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// A login request body's data.
 pub struct UserSession {
-	/// The username which to request the user session for
-	pub username: String,
+	#[serde(flatten)]
+	/// The way to identify the user account the request is for
+	pub identifier: LoginCredentialsIdentifier,
 	/// The authentication for the request
 	pub authentication: UserSessionAuthentication,
 	/// Can be a random UUID
@@ -147,4 +214,19 @@ fn user_session() {
 		serde_json::to_string_pretty(&user_session_query).unwrap();
 
 	assert_eq!(expected_string, received_string);
+}
+
+/// Tries to make the current authentication session last longer
+pub struct ExtendUserSession;
+
+impl Queryable<Authentication, ()> for ExtendUserSession {
+	fn url(&self, _: &Authentication) -> String {
+		format!("{}/userSessions", crate::API_BASE_URI)
+	}
+
+	fn method(&self, _: &Authentication) -> racal::RequestMethod {
+		racal::RequestMethod::Patch
+	}
+
+	fn deserialize(&self, _data: &[u8]) -> serde_json::Result<()> { Ok(()) }
 }

@@ -9,8 +9,8 @@ mod common;
 async fn extend_session() -> Result<(), ApiError> {
 	let client = common::api_auth();
 
-	//let extend_session = resonite::query::ExtendUserSession;
-	//client.query(extend_session).await?;
+	let extend_session = resonite::query::ExtendUserSession;
+	client.query(extend_session).await?;
 
 	Ok(())
 }

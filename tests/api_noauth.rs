@@ -4,35 +4,38 @@ use racal::reqwest::{ApiClient, ApiError};
 
 mod common;
 
-// #[tokio::test]
-// #[ignore]
-// async fn ping() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+#[tokio::test]
+#[ignore]
+async fn ping() -> Result<(), ApiError> {
+	let client = common::api_no_auth();
 
-// 	client.query(resonite::query::Ping).await?;
+	client.query(resonite::query::Ping).await?;
+	client.query(resonite::query::HealthCheck).await?;
 
-// 	Ok(())
-// }
+	Ok(())
+}
 
-// #[tokio::test]
-// #[ignore]
-// async fn online_user_count() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+#[tokio::test]
+#[ignore]
+async fn online_statistics() -> Result<(), ApiError> {
+	let client = common::api_no_auth();
 
-// 	assert!(client.query(resonite::query::OnlineUserCount).await? > 0);
+	let statistics = client.query(resonite::query::OnlineStatistics).await?;
+	assert!(statistics.instance_count > 0);
 
-// 	Ok(())
-// }
+	Ok(())
+}
 
-// #[tokio::test]
-// #[ignore]
-// async fn online_instance_count() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+#[tokio::test]
+#[ignore]
+async fn cloud_statistics() -> Result<(), ApiError> {
+	let client = common::api_no_auth();
 
-// 	assert!(client.query(resonite::query::OnlineInstanceCount).await? > 0);
+	let statistics = client.query(resonite::query::CloudStatistics).await?;
+	assert!(statistics.computed_asset_variants > 0);
 
-// 	Ok(())
-// }
+	Ok(())
+}
 
 // #[tokio::test]
 // #[ignore]
@@ -73,40 +76,41 @@ mod common;
 
 // 	assert!(!users.is_empty());
 
-// 	let resonite_bot_user = users.iter().find(|user| user.username == "Resonite");
+// 	let resonite_bot_user = users.iter().find(|user| user.username ==
+// "Resonite");
 
 // 	assert!(resonite_bot_user.is_some());
 
 // 	Ok(())
 // }
 
-// #[tokio::test]
-// #[ignore]
-// async fn sessions() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+#[tokio::test]
+#[ignore]
+async fn sessions() -> Result<(), ApiError> {
+	let client = common::api_no_auth();
 
-// 	let sessions = client.query(resonite::query::Sessions).await?;
+	let sessions = client.query(resonite::query::Sessions).await?;
 
-// 	let public_session = sessions
-// 		.iter()
-// 		.find(|session| {
-// 			session.access_level == resonite::model::SessionAccessLevel::Anyone
-// 				&& session.is_valid
-// 		})
-// 		.expect("there should be at least one public session");
+	let public_session = sessions
+		.iter()
+		.find(|session| {
+			session.access_level == resonite::model::SessionAccessLevel::Anyone
+				&& session.is_valid
+		})
+		.expect("there should be at least one public session");
 
-// 	// Test that getting a specific session works.
-// 	let session = client
-// 		.query(resonite::query::SessionInfo::new(public_session.id.clone()))
-// 		.await?;
+	// Test that getting a specific session works.
+	let session = client
+		.query(resonite::query::SessionInfo::new(public_session.id.clone()))
+		.await?;
 
-// 	// Some basic sanity checks, can't do full eq since some data might've changed
-// 	assert!(session.id == public_session.id);
-// 	assert!(session.host_id == public_session.host_id);
-// 	assert!(session.compatibility_hash == public_session.compatibility_hash);
+	// Some basic sanity checks, can't do full eq since some data might've changed
+	assert!(session.id == public_session.id);
+	assert!(session.host_id == public_session.host_id);
+	assert!(session.compatibility_hash == public_session.compatibility_hash);
 
-// 	Ok(())
-// }
+	Ok(())
+}
 
 // #[tokio::test]
 // #[ignore]
