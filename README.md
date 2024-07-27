@@ -25,19 +25,11 @@ Which in turn defeats the purpose of the tests in the first place.
 
 ### Generating auth token
 
+To dogfed the API crate, the auth getting is implemented with a simple rust script using this crate itself.
+You can run the binary with:
+
 ```sh
-curl --request POST \
-        --url https://api.resonite.com/userSessions \
-        --header 'Content-Type: application/json' \
-        --header 'Accept: application/json' \
-        --data '{
-    "password": "pa$$word",
-    "secretMachineId": "string",
-    "rememberMe": true,
-    "ownerId": "string",
-    "email": "user@example.com",
-    "username": "string"
-  }' > user-session.json
+cargo run --bin auth-helper --all-features
 ```
 
 ### Running ignored tests
