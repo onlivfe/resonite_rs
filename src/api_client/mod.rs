@@ -117,7 +117,6 @@ impl ApiClient<Authenticating> for AuthenticatingResonite {
 		if let Some(second_factor_token) = &self.data.second_factor {
 			req = req.header("TOTP", second_factor_token);
 		}
-		
 
 		Ok(dbg!(req))
 	}

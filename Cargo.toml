@@ -41,8 +41,8 @@ time = { version = "0.3.36", default-features = false, features = [
 strum = { version = "0.26.3", features = ["derive"] }
 
 # API client specifics
-racal = "0.4.0"
-#racal = { path = "../racal", features = ["reqwest"] }
+#racal = "0.4.0"
+racal = { path = "../racal", features = ["reqwest"] }
 governor = { version = "0.6.3", optional = true }
 tokio = { version = "1.39.1", optional = true }
 async-trait = { version = "0.1.81", optional = true }

@@ -9,12 +9,10 @@ use super::Authenticating;
 pub struct UserSessionPasswordAuthentication {
 	/// The password
 	pub password: String,
-	#[serde(skip_serializing_if = "Option::is_none")] 
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// An optional recovery code
 	pub recovery_code: Option<String>,
 }
-
-
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -33,6 +31,18 @@ pub enum UserSessionAuthentication {
 	Password(UserSessionPasswordAuthentication),
 	/// Authentication using a pre-existing session token
 	SessionToken(UserSessionTokenAuthentication),
+}
+
+impl From<UserSessionTokenAuthentication> for UserSessionAuthentication {
+	fn from(value: UserSessionTokenAuthentication) -> Self {
+		Self::SessionToken(value)
+	}
+}
+
+impl From<UserSessionPasswordAuthentication> for UserSessionAuthentication {
+	fn from(value: UserSessionPasswordAuthentication) -> Self {
+		Self::Password(value)
+	}
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
@@ -65,15 +75,23 @@ impl Queryable<Authenticating, crate::model::UserSessionResult>
 	fn method(&self, _: &Authenticating) -> racal::RequestMethod {
 		racal::RequestMethod::Post
 	}
+
+	fn deserialize(
+		&self, data: &[u8],
+	) -> serde_json::Result<crate::model::UserSessionResult> {
+		let value = String::from_utf8_lossy(data);
+		serde_json::from_str(&dbg!(value))
+	}
 }
 
 #[cfg(test)]
 #[test]
 fn user_session_password_auth() {
-	let expected_deserialized = UserSessionAuthentication::Password(UserSessionPasswordAuthentication {
-		password: "totally-my-password".to_string(),
-		recovery_code: None,
-	});
+	let expected_deserialized =
+		UserSessionAuthentication::Password(UserSessionPasswordAuthentication {
+			password: "totally-my-password".to_string(),
+			recovery_code: None,
+		});
 
 	let expected_str = r#"{
   "$type": "password",
@@ -92,9 +110,10 @@ fn user_session_password_auth() {
 #[cfg(test)]
 #[test]
 fn user_session_token_auth() {
-	let expected_deserialized: UserSessionAuthentication = UserSessionAuthentication::SessionToken(UserSessionTokenAuthentication {
-		session_token: "totally-legit-token".to_string(),
-	});
+	let expected_deserialized: UserSessionAuthentication =
+		UserSessionAuthentication::SessionToken(UserSessionTokenAuthentication {
+			session_token: "totally-legit-token".to_string(),
+		});
 
 	let expected_str = r#"{
   "$type": "sessionToken",
@@ -122,7 +141,8 @@ fn user_session() {
   "secretMachineId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "rememberMe": true
 }"#;
-	let user_session_query: UserSession = serde_json::from_str(expected_string).unwrap();
+	let user_session_query: UserSession =
+		serde_json::from_str(expected_string).unwrap();
 	let received_string =
 		serde_json::to_string_pretty(&user_session_query).unwrap();
 

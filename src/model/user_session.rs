@@ -34,7 +34,10 @@ pub struct UserSession {
 	pub remember_me: bool,
 	/// If the user session has is bound to the specific machine ID
 	pub is_machine_bound: bool,
+	#[serde(default)]
 	/// Presumably an URL which can be used to log out
+	/// 
+	/// Defaulted to an empty string if missing
 	pub logout_url: String,
 	/// If the logout URL can be used client side.
 	///

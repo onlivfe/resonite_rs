@@ -19,21 +19,24 @@ const USER_AGENT: &str = concat!(
 
 #[cfg(feature = "http_client")]
 fn main() {
+	// We really don't need to care about multithreading for this simple tool
+
+use resonite::query::{Authenticating};
+	let rt = tokio::runtime::Builder::new_current_thread()
+		.enable_all()
+		.build()
+		.expect("Creating tokio runtime to work");
+
+	let user_session_file = File::create("local/user-session.json")
+		.expect("Creating local/user-session.json file to work");
+	
+
 	println!(
 		"This is a very simple helper tool to generate a `user-session.json` file for running the integration tests."
 	);
 	println!(
 		"Be aware that it does not censor what you type (including the password)."
 	);
-
-	// We really don't need to care about multithreading for this simple tool
-	let rt = tokio::runtime::Builder::new_current_thread()
-		.enable_all()
-		.build()
-		.expect("Creating tokio runtime to work");
-
-	let user_session_file = File::create("user-session.json")
-		.expect("Creating user-session.json file to work");
 
 	let stdin = io::stdin();
 
@@ -55,7 +58,7 @@ fn main() {
 		println!("Password?");
 		input.clear();
 		stdin.read_line(input).expect("Reading input to work");
-		let input = input.to_owned();
+		let input = input.trim_end_matches('\n').to_owned();
 
 		if input.is_empty() {
 			println!("Username cannot be empty!");
@@ -125,16 +128,18 @@ fn main() {
 
 	let auth_state = resonite::query::Authenticating {
 		second_factor,
-		unique_machine_identifier,
+		unique_machine_identifier: unique_machine_identifier.clone(),
 	};
 
 	let queryable = resonite::query::UserSession {
 		remember_me: true,
 		secret_machine_id,
-		authentication: resonite::query::UserSessionAuthentication::Password(resonite::query::UserSessionPasswordAuthentication{
-			password,
-			recovery_code: None,
-		}),
+		authentication: resonite::query::UserSessionAuthentication::Password(
+			resonite::query::UserSessionPasswordAuthentication {
+				password,
+				recovery_code: None,
+			},
+		),
 		username,
 	};
 
@@ -145,9 +150,9 @@ fn main() {
 	drop(rt);
 
 	println!("Login successful");
-	serde_json::to_writer(user_session_file, &user_session.user_session)
+	serde_json::to_writer_pretty(user_session_file, &user_session.user_session)
 		.expect("Writing user session to work");
-
+	
 	println!(
 		"Dumping config files not implemented, received: {:?}",
 		user_session.config_files

@@ -13,7 +13,7 @@ Cargo.lock
 *.pdb
 
 # For running tests against the live API with your own credentials
-user-session.json
+/local
 
 # Linux directory file.
 .directory

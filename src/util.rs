@@ -38,9 +38,10 @@ pub fn random_ascii_string(bytes_count: u8) -> String {
 	// By using nanorand we avoid pulling in really heavy deps.
 	use nanorand::Rng;
 
+	// Hex
 	const DICT: &[char; 16] = &[
-		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-		'p',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e',
+		'f',
 	];
 
 	let mut bits = [0u8].repeat(bytes_count as usize);
@@ -57,4 +58,11 @@ pub fn random_ascii_string(bytes_count: u8) -> String {
 	}
 
 	string
+}
+
+#[cfg(all(test, feature = "rand_util"))]
+#[test]
+fn uid_gen() {
+	let uid = random_ascii_string(32);
+	assert_eq!(dbg!(uid).chars().count(), 64);
 }
