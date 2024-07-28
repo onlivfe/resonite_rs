@@ -6,12 +6,12 @@
 [![Crates.io](https://img.shields.io/crates/v/resonite.svg)](https://crates.io/crates/resonite)
 [![Docs](https://docs.rs/resonite/badge.svg)](https://docs.rs/crate/resonite/)
 
-WIP Rust models of [Resonite's](https://resonite.com) API.
+Rust models of [Resonite's](https://resonite.com) API.
 
 Any official documentation of Resonite' API is lacking, and the API is still changing too.
 So this crate can't guarantee correctness.
 
-This crate provides an example API client with the optional `api_client` feature.
+This crate provides an example API client with the optional `http_client` & `signalr_client` features.
 
 ## Testing
 

@@ -19,6 +19,6 @@ impl GroupInfo {
 
 impl Queryable<NoAuthentication, crate::model::Group> for GroupInfo {
 	fn url(&self, _: &NoAuthentication) -> String {
-		format!("{}/groups/{}", crate::API_BASE_URI, self.group_id.as_ref())
+		format!("{}/groups/{}", crate::HTTP_BASE_URI, self.group_id.as_ref())
 	}
 }

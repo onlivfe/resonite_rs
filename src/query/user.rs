@@ -83,7 +83,7 @@ impl Queryable<NoAuthentication, crate::model::User> for UserInfo {
 	fn url(&self, _: &NoAuthentication) -> String {
 		format!(
 			"{}/users/{}?byUsername={}",
-			crate::API_BASE_URI,
+			crate::HTTP_BASE_URI,
 			self.user.as_ref(),
 			&(!self.user.is_id()).to_string()
 		)
@@ -104,6 +104,6 @@ impl UserSearch {
 
 impl Queryable<NoAuthentication, Vec<crate::model::User>> for UserSearch {
 	fn url(&self, _: &NoAuthentication) -> String {
-		format!("{}/users?name={}", crate::API_BASE_URI, self.name)
+		format!("{}/users?name={}", crate::HTTP_BASE_URI, self.name)
 	}
 }

@@ -8,7 +8,7 @@ pub struct Sessions;
 
 impl Queryable<NoAuthentication, Vec<crate::model::SessionInfo>> for Sessions {
 	fn url(&self, _: &NoAuthentication) -> String {
-		format!("{}/sessions", crate::API_BASE_URI)
+		format!("{}/sessions", crate::HTTP_BASE_URI)
 	}
 }
 
@@ -28,6 +28,6 @@ impl SessionInfo {
 
 impl Queryable<NoAuthentication, crate::model::SessionInfo> for SessionInfo {
 	fn url(&self, _: &NoAuthentication) -> String {
-		format!("{}/sessions/{}", crate::API_BASE_URI, self.session_id.as_ref())
+		format!("{}/sessions/{}", crate::HTTP_BASE_URI, self.session_id.as_ref())
 	}
 }

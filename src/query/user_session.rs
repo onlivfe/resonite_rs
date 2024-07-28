@@ -130,7 +130,7 @@ impl Queryable<Authenticating, crate::model::UserSessionResult>
 	for UserSession
 {
 	fn url(&self, _: &Authenticating) -> String {
-		format!("{}/userSessions", crate::API_BASE_URI)
+		format!("{}/userSessions", crate::HTTP_BASE_URI)
 	}
 
 	fn body(
@@ -221,7 +221,7 @@ pub struct ExtendUserSession;
 
 impl Queryable<Authentication, ()> for ExtendUserSession {
 	fn url(&self, _: &Authentication) -> String {
-		format!("{}/userSessions", crate::API_BASE_URI)
+		format!("{}/userSessions", crate::HTTP_BASE_URI)
 	}
 
 	fn method(&self, _: &Authentication) -> racal::RequestMethod {

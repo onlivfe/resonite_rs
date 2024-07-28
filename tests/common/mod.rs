@@ -40,3 +40,11 @@ pub fn api_auth() -> AuthenticatedResonite {
 	let auth: Authentication = USER_SESSION.clone().into();
 	AuthenticatedResonite::new(USER_AGENT.to_string(), auth).unwrap()
 }
+
+#[cfg(feature = "signalr_client")]
+pub async fn api_signalr() -> resonite::api_client::ResoniteSignalRClient {
+	let auth: Authentication = USER_SESSION.clone().into();
+	resonite::api_client::ResoniteSignalRClient::new(USER_AGENT, &auth)
+		.await
+		.unwrap()
+}

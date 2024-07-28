@@ -52,6 +52,17 @@ pub struct Authentication {
 	pub user_id: crate::id::User,
 }
 
+impl Authentication {
+	#[must_use]
+	/// Turns the authentication into the header that it generates
+	pub fn to_header(&self) -> (&'static str, String) {
+		(
+			"Authorization",
+			("res ".to_owned() + self.user_id.as_ref() + ":" + &self.token),
+		)
+	}
+}
+
 impl From<crate::model::UserSession> for Authentication {
 	fn from(value: crate::model::UserSession) -> Self {
 		Self { token: value.token, user_id: value.user_id }

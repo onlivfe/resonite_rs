@@ -34,7 +34,7 @@ impl Queryable<Authentication, Vec<crate::model::Message>> for Messages {
 	fn url(&self, auth: &Authentication) -> String {
 		let mut query = format!(
 			"{}/users/{}/messages?maxItems={}",
-			crate::API_BASE_URI,
+			crate::HTTP_BASE_URI,
 			auth.user_id.as_ref(),
 			self.max_amount
 		);
@@ -66,7 +66,7 @@ impl Queryable<Authentication, Self> for crate::model::Message {
 	fn url(&self, _: &Authentication) -> String {
 		format!(
 			"{}/users/{}/messages",
-			crate::API_BASE_URI,
+			crate::HTTP_BASE_URI,
 			self.recipient_id.as_ref(),
 		)
 	}

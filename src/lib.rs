@@ -21,7 +21,9 @@
 #![allow(clippy::multiple_crate_versions)]
 
 /// The base path of the API
-const API_BASE_URI: &str = "https://api.resonite.com";
+const HTTP_BASE_URI: &str = "https://api.resonite.com";
+#[cfg(feature = "signalr_client")]
+const SIGNALR_HUB_URI: &str = "wss://api.resonite.com/hub";
 
 pub mod id;
 pub mod model;
@@ -31,6 +33,7 @@ pub mod util;
 // The models are split into slightly smaller files in order to avoid a really
 // long single file.
 mod assets;
+mod signalr;
 
 // They are re-exported at the top level though to make importing them easier /
 // less confusing.

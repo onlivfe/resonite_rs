@@ -7,7 +7,7 @@ pub struct Ping;
 
 impl Queryable<NoAuthentication, ()> for Ping {
 	fn url(&self, _: &NoAuthentication) -> String {
-		format!("{}/testing/ping", crate::API_BASE_URI)
+		format!("{}/testing/ping", crate::HTTP_BASE_URI)
 	}
 
 	fn deserialize(&self, _data: &[u8]) -> serde_json::Result<()> { Ok(()) }
@@ -20,7 +20,7 @@ pub struct HealthCheck;
 
 impl Queryable<NoAuthentication, ()> for HealthCheck {
 	fn url(&self, _: &NoAuthentication) -> String {
-		format!("{}/testing/healthCheck", crate::API_BASE_URI)
+		format!("{}/testing/healthCheck", crate::HTTP_BASE_URI)
 	}
 
 	fn deserialize(&self, _data: &[u8]) -> serde_json::Result<()> { Ok(()) }
