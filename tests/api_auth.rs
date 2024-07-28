@@ -14,3 +14,31 @@ async fn extend_session() -> Result<(), ApiError> {
 
 	Ok(())
 }
+
+// #[tokio::test]
+// #[ignore]
+// async fn friends() -> Result<(), ApiError> {
+// 	let client = common::api_auth();
+
+// 	let friends_query = resonite::query::Friends::default();
+// 	let friends = client.query(friends_query).await?;
+
+// 	// Neos bot will always be at least one friend of yours
+// 	assert!(!friends.is_empty());
+
+// 	Ok(())
+// }
+
+#[tokio::test]
+#[ignore]
+async fn get_messages() -> Result<(), ApiError> {
+	let client = common::api_auth();
+
+	let messages_query = resonite::query::Messages::default();
+	let messages = dbg!(client.query(messages_query).await?);
+
+	// Test user should have at least a single message
+	assert!(!messages.is_empty());
+
+	Ok(())
+}

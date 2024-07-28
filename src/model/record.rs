@@ -83,6 +83,7 @@ pub struct Record {
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 /// Versioning for a record
 pub struct RecordVersion {
 	/// The version of the asset, in the global scope

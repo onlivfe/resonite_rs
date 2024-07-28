@@ -6,7 +6,6 @@ use super::NoAuthentication;
 /// Gets details of publicly listed sessions
 pub struct Sessions;
 
-// TODO: VecSkipError
 impl Queryable<NoAuthentication, Vec<crate::model::SessionInfo>> for Sessions {
 	fn url(&self, _: &NoAuthentication) -> String {
 		format!("{}/sessions", crate::API_BASE_URI)

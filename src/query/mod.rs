@@ -9,14 +9,20 @@
 use racal::FromApiState;
 use serde::{Deserialize, Serialize};
 
+mod group;
+mod message;
 mod session;
 mod stats;
 mod testing;
+mod user;
 mod user_session;
 
+pub use group::*;
+pub use message::*;
 pub use session::*;
 pub use stats::*;
 pub use testing::*;
+pub use user::*;
 pub use user_session::*;
 
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.

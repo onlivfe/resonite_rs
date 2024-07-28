@@ -9,10 +9,9 @@ pub struct SessionUser {
 	#[serde(rename = "userID")]
 	/// Almost always exists, but rarely inexplicably missing
 	pub id: Option<crate::id::User>,
-	// TODO: Figure out ID type
 	#[serde(rename = "userSessionId")]
 	/// ID of the user's session..?
-	pub session_id: Option<String>,
+	pub session_id: Option<crate::id::UserSession>,
 	/// If the user is focused on this session
 	pub is_present: bool,
 	#[serde(default)]

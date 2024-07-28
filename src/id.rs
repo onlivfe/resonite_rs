@@ -118,6 +118,7 @@ add_id!(Group, "G-");
 add_id!(Session, "S-");
 add_id!(Record, "R-");
 add_id!(Machine, "M-");
+add_id!(UserSession, "");
 
 impl Session {
 	#[must_use]
@@ -149,6 +150,8 @@ pub enum Any {
 	Record(Record),
 	/// A machine ID
 	Machine(Machine),
+	/// An user session's ID
+	UserSession(UserSession),
 }
 
 impl AsRef<str> for Any {
@@ -161,6 +164,7 @@ impl AsRef<str> for Any {
 			Self::Session(v) => &v.0,
 			Self::Record(v) => &v.0,
 			Self::Machine(v) => &v.0,
+			Self::UserSession(v) => &v.0,
 		}
 	}
 }
@@ -219,4 +223,14 @@ impl From<Owner> for Any {
 			Owner::Machine(v) => Self::Machine(v),
 		}
 	}
+}
+
+#[cfg(test)]
+#[test]
+fn user_session_id() {
+	serde_json::from_str::<UserSession>(
+		"\"c982fd2c-5fb4-4a81-b213-6b644f894069\"",
+	)
+	.unwrap();
+	serde_json::from_str::<UserSession>("\"manipulated-str\"").unwrap();
 }

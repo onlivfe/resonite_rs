@@ -20,7 +20,7 @@ async fn ping() -> Result<(), ApiError> {
 async fn online_statistics() -> Result<(), ApiError> {
 	let client = common::api_no_auth();
 
-	let statistics = client.query(resonite::query::OnlineStatistics).await?;
+	let statistics = dbg!(client.query(resonite::query::OnlineStatistics).await?);
 	assert!(statistics.instance_count > 0);
 
 	Ok(())
@@ -31,65 +31,52 @@ async fn online_statistics() -> Result<(), ApiError> {
 async fn cloud_statistics() -> Result<(), ApiError> {
 	let client = common::api_no_auth();
 
-	let statistics = client.query(resonite::query::CloudStatistics).await?;
+	let statistics = dbg!(client.query(resonite::query::CloudStatistics).await?);
 	assert!(statistics.computed_asset_variants > 0);
 
 	Ok(())
 }
 
-// #[tokio::test]
-// #[ignore]
-// async fn get_user() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+#[tokio::test]
+#[ignore]
+async fn get_user() -> Result<(), ApiError> {
+	let client = common::api_no_auth();
 
-// 	let user_id = resonite::id::User::try_from("U-Resonite").unwrap();
-// 	let user_id_query = resonite::query::UserInfo::new(user_id);
-// 	let user_from_id = client.query(user_id_query).await?;
-// 	let user_name_query = resonite::query::UserInfo::new("Resonite");
-// 	let user_from_username = client.query(user_name_query).await?;
+	let user_id = resonite::id::User::try_from("U-Resonite").unwrap();
+	let user_id_query = resonite::query::UserInfo::new(user_id);
+	let user_from_id = dbg!(client.query(user_id_query).await?);
+	let user_name_query = resonite::query::UserInfo::new("Resonite");
+	let user_from_username = dbg!(client.query(user_name_query).await?);
 
-// 	assert_eq!(user_from_id.id, user_from_username.id);
-// 	assert_eq!(user_from_id.username, user_from_username.username);
+	assert_eq!(user_from_id.id, user_from_username.id);
+	assert_eq!(user_from_id.username, user_from_username.username);
 
-// 	Ok(())
-// }
+	Ok(())
+}
 
-// #[tokio::test]
-// #[ignore]
-// async fn get_user_status() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+#[tokio::test]
+#[ignore]
+async fn search_users() -> Result<(), ApiError> {
+	let client = common::api_no_auth();
 
-// 	let user_id = resonite::id::User::try_from("U-Resonite").unwrap();
-// 	let user_status_query = resonite::query::UserStatus::new(user_id);
-// 	let _user_status = client.query(user_status_query).await?;
+	let user_search_query = resonite::query::UserSearch::new("Resonite");
+	let users = dbg!(client.query(user_search_query).await?);
 
-// 	Ok(())
-// }
+	assert!(!users.is_empty());
 
-// #[tokio::test]
-// #[ignore]
-// async fn search_users() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+	let resonite_bot_user = users.iter().find(|user| user.username == "Resonite");
 
-// 	let user_search_query = resonite::query::UserSearch::new("Resonite");
-// 	let users = client.query(user_search_query).await?;
+	assert!(resonite_bot_user.is_some());
 
-// 	assert!(!users.is_empty());
-
-// 	let resonite_bot_user = users.iter().find(|user| user.username ==
-// "Resonite");
-
-// 	assert!(resonite_bot_user.is_some());
-
-// 	Ok(())
-// }
+	Ok(())
+}
 
 #[tokio::test]
 #[ignore]
 async fn sessions() -> Result<(), ApiError> {
 	let client = common::api_no_auth();
 
-	let sessions = client.query(resonite::query::Sessions).await?;
+	let sessions = dbg!(client.query(resonite::query::Sessions).await?);
 
 	let public_session = sessions
 		.iter()
@@ -112,14 +99,16 @@ async fn sessions() -> Result<(), ApiError> {
 	Ok(())
 }
 
-// #[tokio::test]
-// #[ignore]
-// async fn get_group() -> Result<(), ApiError> {
-// 	let client = common::api_no_auth();
+#[tokio::test]
+#[ignore]
+async fn get_group() -> Result<(), ApiError> {
+	let client = common::api_no_auth();
 
-// 	let group_id = resonite::id::Group::try_from("G-Resonite").unwrap();
-// 	let group_query = resonite::query::GroupInfo::new(group_id);
-// 	let _group = client.query(group_query).await?;
+	let group_id = resonite::id::Group::try_from("G-Resonite").unwrap();
+	let group_query = resonite::query::GroupInfo::new(group_id.clone());
+	let group = dbg!(client.query(group_query).await?);
 
-// 	Ok(())
-// }
+	assert_eq!(group.id, group_id);
+
+	Ok(())
+}
