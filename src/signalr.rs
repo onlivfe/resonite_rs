@@ -29,51 +29,64 @@ pub enum Message {
 	/// RPC call
 	Invocation {
 		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":1`
 		num: VariantNumber<1>,
 		#[serde(flatten)]
+		/// The data for the invocation
 		data: Invocation,
 	},
 	/// Data
 	StreamItem {
 		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":2`
 		num: VariantNumber<2>,
 		#[serde(flatten)]
+		/// The data for the stream item
 		data: serde_json::Value,
 	},
 	/// Invocation completed
 	Completion {
 		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":3`
 		num: VariantNumber<3>,
 		#[serde(flatten)]
+		/// The data for the invocation completion
 		data: serde_json::Value,
 	},
 	/// RPC call with streaming
 	StreamInvocation {
 		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":4`
 		num: VariantNumber<4>,
 		#[serde(flatten)]
+		/// The data for the stream invocation
 		data: serde_json::Value,
 	},
 	/// Cancel RPC call
 	CancelInvocation {
 		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":5`
 		num: VariantNumber<5>,
 		#[serde(flatten)]
+		/// The data for the invocation cancelling
 		data: CancelInvocation,
 	},
 	/// Keep the connection alive
 	Ping {
 		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":6`
 		num: VariantNumber<6>,
 	},
 	/// Closes connection
 	Close {
 		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":7`
 		num: VariantNumber<7>,
 	},
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
+/// A hack to force serde to accept numbers as enum tags
 pub struct VariantNumber<const V: u8>;
 
 impl<const V: u8> Serialize for VariantNumber<V> {
@@ -110,16 +123,21 @@ fn message_serde() {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+/// Invocation cancellation
 pub struct CancelInvocation {
+	/// The ID of the invocation
 	pub invocation_id: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+/// An invocation
 pub struct Invocation {
 	#[serde(skip_serializing_if = "Option::is_none")]
+	/// The ID of the invocation
 	pub invocation_id: Option<String>,
 	#[serde(flatten)]
+	/// Data of the invocation
 	pub data: InvocationData,
 }
 
@@ -136,10 +154,15 @@ pub struct Invocation {
 	strum::VariantNames,
 )]
 #[serde(tag = "target", content = "arguments")]
+/// Data of an invocation
 pub enum InvocationData {
+	/// Data about a session update
 	ReceiveSessionUpdate((Box<crate::model::SessionInfo>,)),
+	/// Debug data
 	Debug((String,)),
+	/// Session removal data
 	RemoveSession((crate::id::Session, OffsetDateTime)),
+	/// Not yet supported or failed serde parsing of the invocation
 	#[serde(untagged)]
 	Unknown(serde_json::Value),
 }

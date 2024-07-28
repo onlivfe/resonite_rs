@@ -1,4 +1,4 @@
-//! Models for querying the Resonite API
+//! Models for querying the Resonite API via the HTTP/REST API
 
 // Everything is based on Resonite's models, so not much can be done
 #![allow(clippy::struct_excessive_bools)]

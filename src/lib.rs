@@ -33,7 +33,7 @@ pub mod util;
 // The models are split into slightly smaller files in order to avoid a really
 // long single file.
 mod assets;
-mod signalr;
+pub mod signalr;
 
 // They are re-exported at the top level though to make importing them easier /
 // less confusing.
