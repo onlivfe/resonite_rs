@@ -15,19 +15,18 @@ async fn extend_session() -> Result<(), ApiError> {
 	Ok(())
 }
 
-// #[tokio::test]
-// #[ignore]
-// async fn friends() -> Result<(), ApiError> {
-// 	let client = common::api_auth();
+#[tokio::test]
+#[ignore]
+async fn contacts() -> Result<(), ApiError> {
+	let client = common::api_auth();
 
-// 	let friends_query = resonite::query::Friends::default();
-// 	let friends = client.query(friends_query).await?;
+	let friends = dbg!(client.query(resonite::query::Contacts).await?);
 
-// 	// Neos bot will always be at least one friend of yours
-// 	assert!(!friends.is_empty());
+	// Neos bot will always be at least one friend of yours
+	assert!(!friends.is_empty());
 
-// 	Ok(())
-// }
+	Ok(())
+}
 
 #[tokio::test]
 #[ignore]
