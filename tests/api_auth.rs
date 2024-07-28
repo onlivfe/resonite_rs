@@ -22,7 +22,7 @@ async fn contacts() -> Result<(), ApiError> {
 
 	let friends = dbg!(client.query(resonite::query::Contacts).await?);
 
-	// Neos bot will always be at least one friend of yours
+	// Resonite bot will always be at least one friend of yours
 	assert!(!friends.is_empty());
 
 	Ok(())
