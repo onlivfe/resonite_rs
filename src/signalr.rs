@@ -3,6 +3,8 @@
 // Everything is re-exported from here, and just organized to files
 // for easier navigation & better development experience.
 #![allow(clippy::module_name_repetitions)]
+// Dunno
+#![allow(clippy::collection_is_never_read)]
 
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
