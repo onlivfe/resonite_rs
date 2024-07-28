@@ -9,6 +9,7 @@
 use racal::FromApiState;
 use serde::{Deserialize, Serialize};
 
+mod contact;
 mod group;
 mod message;
 mod session;
@@ -17,6 +18,7 @@ mod testing;
 mod user;
 mod user_session;
 
+pub use contact::*;
 pub use group::*;
 pub use message::*;
 pub use session::*;

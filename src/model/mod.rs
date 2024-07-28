@@ -7,6 +7,8 @@
 #![allow(clippy::module_name_repetitions)]
 
 mod assembly_info;
+mod contact;
+mod contact_status;
 mod db_asset;
 mod group;
 mod message;
@@ -28,6 +30,8 @@ mod user_session_metadata;
 mod user_status;
 
 pub use assembly_info::*;
+pub use contact::*;
+pub use contact_status::*;
 pub use db_asset::*;
 pub use group::*;
 pub use message::*;
