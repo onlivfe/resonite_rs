@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
+use serde_with::serde_as;
 use time::{serde::rfc3339, OffsetDateTime};
 
+#[serde_as]
 #[derive(Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// An users (login/authorization) session.
@@ -22,18 +24,23 @@ pub struct UserSession {
 	#[serde(with = "rfc3339")]
 	/// When the user session is set to expire
 	pub expiration_time: OffsetDateTime,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Returned when creating a new session
 	pub secret_machine_id_hash: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Returned when creating a new session
 	pub secret_machine_id_salt: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Returned when creating a new session
 	pub uid_hash: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Returned when creating a new session
 	pub uid_salt: Option<String>,
 	/// If the user session has the remember me checked (lives longer)
 	pub remember_me: bool,
 	/// If the user session has is bound to the specific machine ID
 	pub is_machine_bound: bool,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// Presumably an URL which can be used to log out
 	///

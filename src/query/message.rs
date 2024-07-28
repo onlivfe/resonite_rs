@@ -12,8 +12,10 @@ pub struct Messages {
 	pub max_amount: u16,
 	/// If to fetch only unread messages
 	pub unread_only: bool,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// If to only query messages that were sent after a certain time
 	pub from_time: Option<OffsetDateTime>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// If to only query messages with a certain user
 	pub with_user: Option<crate::id::User>,
 }
@@ -52,13 +54,6 @@ impl Queryable<Authentication, Vec<crate::model::Message>> for Messages {
 
 		query
 	}
-
-	fn deserialize(
-		&self, data: &[u8],
-	) -> serde_json::Result<Vec<crate::model::Message>> {
-		let text = String::from_utf8_lossy(data);
-		serde_json::from_str(&dbg!(text))
-	}
 }
 
 /// Send a message
@@ -79,10 +74,5 @@ impl Queryable<Authentication, Self> for crate::model::Message {
 
 	fn method(&self, _state: &Authentication) -> racal::RequestMethod {
 		racal::RequestMethod::Post
-	}
-
-	fn deserialize(&self, data: &[u8]) -> serde_json::Result<Self> {
-		let text = String::from_utf8_lossy(data);
-		serde_json::from_str(&dbg!(text))
 	}
 }

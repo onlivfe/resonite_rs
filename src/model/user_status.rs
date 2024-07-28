@@ -10,12 +10,18 @@ use super::UserSessionType;
 pub struct UserStatus {
 	/// The ID of the user this status is for
 	pub user_id: crate::id::User,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The session ID of the user
 	pub user_session_id: Option<crate::id::UserSession>,
 	/// Session type of the user
 	#[serde(rename = "sessionType")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub user_session_type: Option<UserSessionType>,
-	/// "Screen" or "VR" for example
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
+	/// The output device type of the user
+	///
+	/// Default is used if missing from API response
 	pub output_device: crate::model::OutputDevice,
 	/// If the user is using a mobile client.
 	pub is_mobile: bool,
@@ -26,21 +32,27 @@ pub struct UserStatus {
 	#[serde(rename = "lastPresenceTimestamp")]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the user was last present
 	pub last_presence_time: Option<OffsetDateTime>,
 	#[serde(rename = "lastStatusChange")]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the user's status last changed
 	pub last_status_change_time: Option<OffsetDateTime>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Who knows?
 	pub hash_salt: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Only seems to exist when the user is online
 	pub app_version: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Only seems to exist when the user is online
 	pub compatibility_hash: Option<String>,
 	/// Only seems to exist when the user is online
 	#[serde(rename = "publicRSAKey")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub public_rsa_key: Option<crate::model::RSAParametersData>,
 	/// Only seems to exist when the user is online
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]

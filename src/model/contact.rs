@@ -27,11 +27,13 @@ pub struct Contact {
 	pub is_accepted: bool,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the latest message with the friend was at.
 	///
 	/// Wrong/Invalid dates such as `0001-01-01T00:00:00` are expressed as
 	/// None.
 	pub latest_message_time: Option<OffsetDateTime>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The profile of the user
 	pub profile: Option<crate::model::UserProfile>,
 	#[serde(default)]

@@ -100,7 +100,8 @@ impl ApiClient<Authenticating> for AuthenticatingResonite {
 			req = req.header("TOTP", second_factor_token);
 		}
 
-		Ok(dbg!(req))
+		//Ok(dbg!(req))
+		Ok(req)
 	}
 }
 

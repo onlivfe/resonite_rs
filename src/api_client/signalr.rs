@@ -1,10 +1,13 @@
+use std::time::Duration;
+
 use async_trait::async_trait;
 use serde::Serialize;
-use tokio::{
-	sync::mpsc::UnboundedSender,
-	task::{JoinHandle, JoinSet},
-};
+use tokio::{sync::mpsc::UnboundedSender, task::JoinSet, time::timeout};
 use tokio_stream::wrappers::UnboundedReceiverStream;
+
+// U+001e
+const SIGNALR_DELIMITER: u8 = b""[0];
+const PROTOCOL_NEGOTIATION: &str = r#"{"protocol":"json","version":1}"#;
 
 use super::ApiError;
 use crate::query::Authentication;
@@ -31,15 +34,23 @@ struct InternalClientExt {
 impl InternalClientExt {
 	/// Turns a WS receiving channel to an async streams
 	fn send_ws_msg(&self, bytes: &[u8]) {
-		let res: ListenMessageResult =
-			serde_json::from_slice::<crate::signalr::Message>(bytes)
-				.map_err(ApiError::from);
-		match self.received_sender.send(res) {
-			Ok(v) => v,
-			Err(_e) => {
-				// TODO: Error handling
-			}
-		};
+		// SignalR/Resonite sends empty obj sometimes, just ignore it IG
+		const IGNORE_BYTES: &[u8; 2] = b"{}";
+		for bytes in bytes
+			.split(|b| b == &SIGNALR_DELIMITER)
+			.filter(|v| !v.is_empty() && v != IGNORE_BYTES)
+		{
+			//dbg!(String::from_utf8_lossy(bytes));
+			let res: ListenMessageResult =
+				serde_json::from_slice::<crate::signalr::Message>(bytes)
+					.map_err(ApiError::from);
+			match self.received_sender.send(res) {
+				Ok(v) => v,
+				Err(_e) => {
+					// TODO: Error handling
+				}
+			};
+		}
 	}
 }
 
@@ -66,7 +77,6 @@ impl ezsockets::ClientExt for InternalClientExt {
 	}
 
 	async fn on_connect(&mut self) -> Result<(), ezsockets::Error> {
-		dbg!("Connected!");
 		self.connected_sender.send(true).ok();
 
 		Ok(())
@@ -102,23 +112,25 @@ impl ResoniteSignalRClient {
 
 		let mut handle = JoinSet::new();
 
-		if let Err(_e) = internal_client.call(()) {
-			// TODO: Error handling
-		}
-
 		handle.spawn(async move {
 			// Resolves once connection is closed
 			future.await.ok();
 		});
 
+		timeout(Duration::from_secs(10), connected_receiver.recv()).await.map_err(
+			|_e| ApiError::Other("Connection establishment timed out".to_string()),
+		)?;
+		internal_client.binary(PROTOCOL_NEGOTIATION).ok();
+
+		// Handle protocol negotiations when reconnecting too
 		let client_clone = internal_client.clone();
 		handle.spawn(async move {
 			loop {
-				dbg!("Awaiting connection");
+				//dbg!("Awaiting connection");
 				connected_receiver.recv().await;
 
-				client_clone.binary(r#"{"protocol":"json","version":1}"#).ok();
-				dbg!("Sent protocol");
+				client_clone.binary(PROTOCOL_NEGOTIATION).ok();
+				//dbg!("Sent protocol");
 			}
 		});
 

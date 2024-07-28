@@ -18,6 +18,7 @@ pub struct SessionInfo {
 	/// Defaulted to empty string if the API returns none for the session.
 	pub description: String,
 	#[serde(rename = "correspondingWorldId")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The ID of the session's world
 	pub world: Option<crate::model::RecordId>,
 	#[serde(default)]
@@ -31,11 +32,12 @@ pub struct SessionInfo {
 	/// example)
 	pub normalized_id: String,
 	#[serde(rename = "hostUserId")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The ID of the session's host (`U-{uuid}` for example)
 	pub host_id: Option<crate::id::User>,
-	// TODO: type the ID properly
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The ID of the host user's session
-	pub host_user_session_id: Option<String>,
+	pub host_user_session_id: Option<crate::id::UserSession>,
 	/// The ID of the session's host's machine (`{uuid}`)
 	pub host_machine_id: String,
 	/// The username of the session's host
@@ -55,6 +57,7 @@ pub struct SessionInfo {
 	///
 	/// Defaults to empty if missing
 	pub data_model_assemblies: Vec<AssemblyInfo>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// Which Resonite "universe" the session is in
 	///
@@ -67,11 +70,12 @@ pub struct SessionInfo {
 	pub is_headless_host: bool,
 	#[serde(rename = "sessionURLs")]
 	/// Links to the session, in custom protocols such as `lnl-nat:///` and
-	/// `resonite-steam://`
+	/// `res-steam://`
 	pub urls: Vec<String>,
 	#[serde(rename = "sessionUsers")]
 	/// A list of the session's users very basic details.
 	pub users: Vec<crate::model::SessionUser>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// A link to the thumbnail of the session.
 	///
 	/// Can be `https://` or `neosdb://` for example
@@ -159,4 +163,112 @@ impl SessionInfo {
 	/// Note that this is imperfect and not using an actual XML parser to remain
 	/// lightweight.
 	pub fn stripped_name(&self) -> String { bad_xml_strip(&self.name) }
+}
+
+#[allow(clippy::too_many_lines)]
+#[cfg(test)]
+#[test]
+fn session_info() {
+	use serde_json::json;
+
+	let json = json!(        {
+			"name": "<color=yellow>Soko's Library</color> - Folders, Items, Avatars",
+			"description": "Folders, Items, Avatars, collected for new player equipping.",
+			"correspondingWorldId": {
+					"recordId": "R-62ab89f9-7b06-4487-8e36-35f2e46647f8",
+					"ownerId": "U-Lpsuchtie"
+			},
+			"tags": [
+					"fukuro",
+					"world",
+					"library",
+					"プリメロ工房",
+					"photo",
+					"public",
+					"folder",
+					"folders",
+					"items",
+					"avatars",
+					"soko"
+			],
+			"sessionId": "S-U-1QMVJqtmCsC:soko_library",
+			"normalizedSessionId": "s-u-1qmvjqtmcsc:soko_library",
+			"hostUserId": "U-1QMVJqtmCsC",
+			"hostUserSessionId": "ffa04206-bf29-4c02-98cd-2664ed6aaccb",
+			"hostMachineId": "7rpx1gn4dojdinqdhhwddqmbwqq1dw1jjdzjstpm3yisss5poq5o",
+			"hostUsername": "toaster_headless",
+			"compatibilityHash": "flPfsJqNoHFSFmtE9Nml8g==",
+			"systemCompatibilityHash": "Wdkgr1roe8mxg4hbQ8EeNQ==",
+			"dataModelAssemblies": [
+					{
+							"name": "Elements.Assets",
+							"compatibilityHash": "Wk+BcQBAZQudiVcIa5eRyQ=="
+					},
+					{
+							"name": "Elements.Core",
+							"compatibilityHash": "3XaWAwwz7srqNA3kWPtREA=="
+					},
+					{
+							"name": "FrooxEngine",
+							"compatibilityHash": "k6Bzkm46ALxejJ/He3tPCQ=="
+					},
+					{
+							"name": "FrooxEngine.Store",
+							"compatibilityHash": "K22/sKfODKjKTdTi7M/GnQ=="
+					},
+					{
+							"name": "ProtoFlux.Nodes.Core",
+							"compatibilityHash": "XxMkLAc6ulemxNEOJo7IOQ=="
+					},
+					{
+							"name": "ProtoFlux.Nodes.FrooxEngine",
+							"compatibilityHash": "w5eT+VlkgtJngh/EZmrhfg=="
+					},
+					{
+							"name": "ProtoFluxBindings",
+							"compatibilityHash": "xVTKyKC5GEjeT7iUKFUn5g=="
+					},
+					{
+							"name": "SkyFrost.Base",
+							"compatibilityHash": "te30htqkPqTW/nEKuspZsA=="
+					},
+					{
+							"name": "SkyFrost.Base.Models",
+							"compatibilityHash": "pi+qiFhdImZ42rvy8ybJnQ=="
+					}
+			],
+			"universeId": null,
+			"appVersion": "2024.7.25.1284",
+			"headlessHost": true,
+			"sessionURLs": [
+					"lnl-nat://be2ae106c5a14ea58ed05664ab2306bd/S-U-1QMVJqtmCsC:soko_library"
+			],
+			"parentSessionIds": [],
+			"nestedSessionIds": [],
+			"sessionUsers": [
+					{
+							"username": "toaster_headless",
+							"userID": "U-1QMVJqtmCsC",
+							"userSessionId": null,
+							"isPresent": false,
+							"outputDevice": null
+					}
+			],
+			"thumbnailUrl": null,
+			"joinedUsers": 0,
+			"activeUsers": 0,
+			"totalJoinedUsers": 0,
+			"totalActiveUsers": 0,
+			"maxUsers": 10,
+			"mobileFriendly": false,
+			"sessionBeginTime": "2024-07-28T22:00:44.403632Z",
+			"lastUpdate": "2024-07-28T23:25:47.013536Z",
+			"accessLevel": "Anyone",
+			"hideFromListing": false,
+			"broadcastKey": null,
+			"hasEnded": false,
+			"isValid": true
+	});
+
+	serde_json::from_value::<SessionInfo>(json).unwrap();
 }

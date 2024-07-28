@@ -142,13 +142,6 @@ impl Queryable<Authenticating, crate::model::UserSessionResult>
 	fn method(&self, _: &Authenticating) -> racal::RequestMethod {
 		racal::RequestMethod::Post
 	}
-
-	fn deserialize(
-		&self, data: &[u8],
-	) -> serde_json::Result<crate::model::UserSessionResult> {
-		let value = String::from_utf8_lossy(data);
-		serde_json::from_str(&dbg!(value))
-	}
 }
 
 #[cfg(test)]

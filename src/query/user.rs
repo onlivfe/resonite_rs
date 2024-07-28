@@ -47,25 +47,6 @@ impl From<crate::id::User> for UserIdOrUsername {
 }
 
 /// Gets details of an user by either username or ID
-///
-/// # Example usage
-///
-/// ```no_run
-/// # tokio_test::block_on(async {
-/// # use resonite::{api_client::{UnauthenticatedResonite, ApiClient}, query::UserSearch};
-/// # let USER_AGENT = String::new();
-/// # let resonite_api_client = UnauthenticatedResonite::new(USER_AGENT).unwrap();
-/// let resonite_user_search_query = UserSearch::new("Resonite");
-/// let resonite_bot = resonite_api_client
-/// 	.query(resonite_user_search_query)
-/// 	.await
-/// 	.expect("to be able to get the Resonite bot account from Resonite");
-/// println!(
-/// 	"The Resonite bot supposedly registered on {}",
-/// 	&resonite_bot.first().unwrap().registration_time
-/// );
-/// # })
-/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct UserInfo {
 	/// The ID or username to query information about

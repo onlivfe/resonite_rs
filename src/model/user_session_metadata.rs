@@ -5,6 +5,7 @@
 #[serde(rename_all = "camelCase")]
 /// A Resonite session, often called an instance on other platforms.
 pub struct UserSessionMetadata {
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// A hash to check if the session is compatible (version, plugins, etc)
 	///

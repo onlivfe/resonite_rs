@@ -44,6 +44,7 @@ pub struct Record {
 	///
 	/// Defaulted to empty string if it doesn't exist.
 	pub path: String,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The URI that this record's thumbnail is at
 	pub thumbnail_uri: Option<crate::AssetUrl>,
 	#[serde(with = "rfc3339")]
@@ -51,10 +52,12 @@ pub struct Record {
 	pub last_modification_time: OffsetDateTime,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the record was created at
 	pub creation_time: Option<OffsetDateTime>,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the record was first published at
 	pub first_publish_time: Option<OffsetDateTime>,
 	/// If the record has been deleted or not

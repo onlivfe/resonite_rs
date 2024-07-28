@@ -18,6 +18,7 @@ pub struct User {
 	///
 	/// Defaulted to empty array
 	pub alternate_normalized_names: Vec<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The email address of the user.
 	/// Only visible when logged in.
 	pub email: Option<String>,
@@ -44,6 +45,7 @@ pub struct User {
 	pub old_emails: Vec<String>,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When is it the birthday of the user
 	/// Presumably only visible when logged in.
 	///
@@ -57,30 +59,37 @@ pub struct User {
 	pub is_verified: bool,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the account ban expires
 	pub account_ban_expiration: Option<OffsetDateTime>,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the public ban expires
 	pub public_ban_expiration: Option<OffsetDateTime>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The type of public ban
 	pub public_ban_type: Option<crate::model::PublicBanType>,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the spectator ban expires
 	pub spectator_ban_expiration: Option<OffsetDateTime>,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the mute ban expires
 	pub mute_ban_expiration: Option<OffsetDateTime>,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the listing ban expires
 	pub listing_ban_expiration: Option<OffsetDateTime>,
 	// TODO: ID type
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(rename = "uniqueDeviceIDs")]
 	#[serde(default)]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When is it the birthday of the user
 	/// Presumably only visible when logged in.
 	///
@@ -90,8 +99,10 @@ pub struct User {
 	#[serde(default)]
 	/// Tags of the user. Seem to match up with the badges.
 	pub tags: Vec<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// If referred to Resonite by some other user
 	pub referrer_user_id: Option<crate::id::User>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The profile of the user
 	pub profile: Option<crate::model::UserProfile>,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
@@ -115,6 +126,7 @@ pub struct User {
 	#[deprecated = "Marked as legacy"]
 	#[serde_as(deserialize_as = "serde_with::DefaultOnError")]
 	#[serde(default)]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// How much large is the users storage quota.
 	///
 	/// The API returns -1 for no permissions, which is de-serialized into None
@@ -123,6 +135,7 @@ pub struct User {
 	#[deprecated = "Marked as legacy"]
 	#[serde_as(deserialize_as = "serde_with::DefaultOnError")]
 	#[serde(default)]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// How much storage quota the user has used.
 	///
 	/// The API returns -1 for no permissions, which is de-serialized into None

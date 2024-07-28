@@ -66,7 +66,7 @@ features = ["json", "rustls-tls"]
 optional = true
 version = "0.6.2"
 default-features = false
-features = ["client", "native_client"]
+features = ["client", "native_client", "rustls"]
 
 [dev-dependencies]
 tokio-test = "0.4.4"

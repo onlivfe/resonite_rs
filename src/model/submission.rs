@@ -21,11 +21,13 @@ pub struct Submission {
 	pub submitted_by_name: String,
 	/// If the submission should be featured or not
 	pub featured: bool,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The ID of the user that enabled featuring this submission
 	pub featured_by_user_id: Option<crate::id::User>,
 	#[serde(rename = "featuredTimestamp")]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When featuring this submission was enabled
 	pub featured_time: Option<OffsetDateTime>,
 }

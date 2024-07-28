@@ -13,6 +13,7 @@ pub struct Message {
 	pub sender_id: crate::id::User,
 	/// If the user is focused on this session
 	pub recipient_id: crate::id::User,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// The user session ID of the sender of the message
 	pub sender_user_session_id: Option<crate::id::UserSession>,
 	/// The contents of the message
@@ -26,6 +27,7 @@ pub struct Message {
 	pub last_update_time: OffsetDateTime,
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the message was sent
 	pub read_time: Option<OffsetDateTime>,
 	#[serde(default)]
