@@ -1,5 +1,5 @@
 //! An optional API client features using `reqwest` for the HTTP parts,
-//! and `signalrs-client-custom-auth` for [`SignalR`](https://dotnet.microsoft.com/en-us/apps/aspnet/signalr).
+//! and `tokio-tungstenite` for [`SignalR`](https://dotnet.microsoft.com/en-us/apps/aspnet/signalr).
 //!
 //! Besides using this, you could instead easily implement your own client using
 //! a different HTTP library with the [`racal::Queryable`](racal::Queryable)
