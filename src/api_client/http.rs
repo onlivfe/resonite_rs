@@ -21,7 +21,7 @@ use crate::query::{Authenticating, Authentication, NoAuthentication};
 type NormalRateLimiter =
 	RateLimiter<NotKeyed, InMemoryState, DefaultClock, NoOpMiddleware>;
 
-#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 /// Data needed to actually request an user session.
 ///
 /// Mixes headers and actual body data together, not an actual Resonite model.

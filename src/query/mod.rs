@@ -44,7 +44,7 @@ impl racal::FromApiState<Authentication> for NoAuthentication {
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
 /// With authentication
-#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 pub struct Authentication {
 	/// The secret authentication token
 	pub token: String,
@@ -82,7 +82,7 @@ impl FromApiState<Self> for Authentication {
 	fn from_state(state: &Self) -> &Self { state }
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
 /// Contains the data needed to actually request an user session.
