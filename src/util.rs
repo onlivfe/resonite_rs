@@ -4,7 +4,7 @@ pub mod opt_rfc3339 {
 	//! Time serde for date time's RFC3339 where errors are converted to None.
 	#![allow(clippy::unnecessary_wraps)]
 	use serde::{Deserializer, Serializer};
-	use time::{serde::rfc3339, OffsetDateTime};
+	use time::{OffsetDateTime, serde::rfc3339};
 
 	/// Deserializes data into an offset date time, ignoring errors
 	///

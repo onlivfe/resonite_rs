@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use time::{serde::rfc3339, OffsetDateTime};
+use time::{OffsetDateTime, serde::rfc3339};
 
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]

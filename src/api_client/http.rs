@@ -1,17 +1,17 @@
 use std::num::NonZeroU32;
 
 use governor::{
+	Quota,
+	RateLimiter,
 	clock::DefaultClock,
 	middleware::NoOpMiddleware,
 	state::{InMemoryState, NotKeyed},
-	Quota,
-	RateLimiter,
 };
 pub use racal::reqwest::ApiClient;
 use reqwest::{
-	header::{HeaderMap, HeaderValue},
 	Client,
 	RequestBuilder,
+	header::{HeaderMap, HeaderValue},
 };
 use serde::{Deserialize, Serialize};
 

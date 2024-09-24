@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
-use time::serde::rfc3339;
 use time::OffsetDateTime;
+use time::serde::rfc3339;
 
 use super::{SessionAccessLevel, UserSessionType};
 

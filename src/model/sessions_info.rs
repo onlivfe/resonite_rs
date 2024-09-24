@@ -1,4 +1,4 @@
-use time::{serde::rfc3339, OffsetDateTime};
+use time::{OffsetDateTime, serde::rfc3339};
 
 use super::AssemblyInfo;
 
