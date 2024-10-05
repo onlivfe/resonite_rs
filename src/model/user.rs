@@ -18,7 +18,9 @@ pub struct User {
 	///
 	/// Defaulted to empty array
 	pub alternate_normalized_names: Vec<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The email address of the user.
 	/// Only visible when logged in.
 	pub email: Option<String>,
@@ -99,10 +101,14 @@ pub struct User {
 	#[serde(default)]
 	/// Tags of the user. Seem to match up with the badges.
 	pub tags: Vec<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// If referred to Resonite by some other user
 	pub referrer_user_id: Option<crate::id::User>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The profile of the user
 	pub profile: Option<crate::model::UserProfile>,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]

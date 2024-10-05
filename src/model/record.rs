@@ -44,7 +44,9 @@ pub struct Record {
 	///
 	/// Defaulted to empty string if it doesn't exist.
 	pub path: String,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The URI that this record's thumbnail is at
 	pub thumbnail_uri: Option<crate::AssetUrl>,
 	#[serde(with = "rfc3339")]

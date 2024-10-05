@@ -18,7 +18,9 @@ pub struct SessionInfo {
 	/// Defaulted to empty string if the API returns none for the session.
 	pub description: String,
 	#[serde(rename = "correspondingWorldId")]
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The ID of the session's world
 	pub world: Option<crate::model::RecordId>,
 	#[serde(default)]
@@ -32,10 +34,14 @@ pub struct SessionInfo {
 	/// example)
 	pub normalized_id: String,
 	#[serde(rename = "hostUserId")]
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The ID of the session's host (`U-{uuid}` for example)
 	pub host_id: Option<crate::id::User>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The ID of the host user's session
 	pub host_user_session_id: Option<crate::id::UserSession>,
 	/// The ID of the session's host's machine (`{uuid}`)
@@ -75,7 +81,9 @@ pub struct SessionInfo {
 	#[serde(rename = "sessionUsers")]
 	/// A list of the session's users very basic details.
 	pub users: Vec<crate::model::SessionUser>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// A link to the thumbnail of the session.
 	///
 	/// Can be `https://` or `neosdb://` for example

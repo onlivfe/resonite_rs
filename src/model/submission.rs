@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use time::{OffsetDateTime, serde::rfc3339};
 
+#[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// A Resonite record's submission to a group
@@ -21,7 +22,9 @@ pub struct Submission {
 	pub submitted_by_name: String,
 	/// If the submission should be featured or not
 	pub featured: bool,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The ID of the user that enabled featuring this submission
 	pub featured_by_user_id: Option<crate::id::User>,
 	#[serde(rename = "featuredTimestamp")]

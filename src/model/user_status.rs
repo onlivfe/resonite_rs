@@ -10,12 +10,16 @@ use super::UserSessionType;
 pub struct UserStatus {
 	/// The ID of the user this status is for
 	pub user_id: crate::id::User,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The session ID of the user
 	pub user_session_id: Option<crate::id::UserSession>,
 	/// Session type of the user
 	#[serde(rename = "sessionType")]
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	pub user_session_type: Option<UserSessionType>,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
@@ -41,18 +45,26 @@ pub struct UserStatus {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the user's status last changed
 	pub last_status_change_time: Option<OffsetDateTime>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// Who knows?
 	pub hash_salt: Option<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// Only seems to exist when the user is online
 	pub app_version: Option<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// Only seems to exist when the user is online
 	pub compatibility_hash: Option<String>,
 	/// Only seems to exist when the user is online
 	#[serde(rename = "publicRSAKey")]
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	pub public_rsa_key: Option<crate::model::RSAParametersData>,
 	/// Only seems to exist when the user is online
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]

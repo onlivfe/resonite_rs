@@ -129,11 +129,14 @@ pub struct CancelInvocation {
 	pub invocation_id: String,
 }
 
+#[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 /// An invocation
 pub struct Invocation {
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The ID of the invocation
 	pub invocation_id: Option<String>,
 	#[serde(flatten)]

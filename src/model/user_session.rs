@@ -24,16 +24,24 @@ pub struct UserSession {
 	#[serde(with = "rfc3339")]
 	/// When the user session is set to expire
 	pub expiration_time: OffsetDateTime,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// Returned when creating a new session
 	pub secret_machine_id_hash: Option<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// Returned when creating a new session
 	pub secret_machine_id_salt: Option<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// Returned when creating a new session
 	pub uid_hash: Option<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// Returned when creating a new session
 	pub uid_salt: Option<String>,
 	/// If the user session has the remember me checked (lives longer)

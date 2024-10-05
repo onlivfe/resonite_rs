@@ -4,6 +4,7 @@ use time::OffsetDateTime;
 
 use super::Authentication;
 
+#[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 /// Query the messages for a specific user
 pub struct Messages {
@@ -12,9 +13,13 @@ pub struct Messages {
 	pub max_amount: u16,
 	/// If to fetch only unread messages
 	pub unread_only: bool,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// If to only query messages that were sent after a certain time
 	pub from_time: Option<OffsetDateTime>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// If to only query messages with a certain user
 	pub with_user: Option<crate::id::User>,

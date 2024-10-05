@@ -3,12 +3,15 @@ use serde::{Deserialize, Serialize};
 
 use super::{Authenticating, Authentication};
 
+#[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Authentication using a password for an user session
 pub struct UserSessionPasswordAuthentication {
 	/// The password
 	pub password: String,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// An optional recovery code
 	pub recovery_code: Option<String>,

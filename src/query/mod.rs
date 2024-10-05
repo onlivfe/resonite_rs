@@ -82,6 +82,7 @@ impl FromApiState<Self> for Authentication {
 	fn from_state(state: &Self) -> &Self { state }
 }
 
+#[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
@@ -95,7 +96,10 @@ pub struct Authenticating {
 	/// Could be any SHA256, but API will treat this as a different device based
 	/// on the value of this.
 	pub unique_machine_identifier: String,
-	#[serde(rename = "TOTP", skip_serializing_if = "Option::is_none")]
+	#[serde(rename = "TOTP")]
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// TOTP header.
 	///
 	/// Usually should be composed of just a few numbers.

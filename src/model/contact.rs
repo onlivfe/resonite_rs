@@ -33,7 +33,9 @@ pub struct Contact {
 	/// Wrong/Invalid dates such as `0001-01-01T00:00:00` are expressed as
 	/// None.
 	pub latest_message_time: Option<OffsetDateTime>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	/// The profile of the user
 	pub profile: Option<crate::model::UserProfile>,
 	#[serde(default)]
