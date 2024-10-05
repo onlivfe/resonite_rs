@@ -44,7 +44,7 @@ impl<'de> Deserialize<'de> for OutputDevice {
 	{
 		struct OutputDeviceVisitor;
 
-		impl<'de> serde::de::Visitor<'de> for OutputDeviceVisitor {
+		impl serde::de::Visitor<'_> for OutputDeviceVisitor {
 			type Value = OutputDevice;
 
 			fn expecting(

@@ -102,7 +102,7 @@ impl<'de> serde::de::Deserialize<'de> for AssetUrl {
 	{
 		struct IdVisitor;
 
-		impl<'de> serde::de::Visitor<'de> for IdVisitor {
+		impl serde::de::Visitor<'_> for IdVisitor {
 			type Value = AssetUrl;
 
 			fn expecting(

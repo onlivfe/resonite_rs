@@ -55,7 +55,7 @@ impl<'de> Deserialize<'de> for SessionAccessLevel {
 	{
 		struct SessionAccessLevelVisitor;
 
-		impl<'de> Visitor<'de> for SessionAccessLevelVisitor {
+		impl Visitor<'_> for SessionAccessLevelVisitor {
 			type Value = SessionAccessLevel;
 
 			fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
