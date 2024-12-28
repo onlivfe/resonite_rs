@@ -139,6 +139,7 @@ impl std::fmt::Debug for ConfigFileData {
 	}
 }
 
+#[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Result from the API when requesting an user session
@@ -146,6 +147,8 @@ pub struct UserSessionResult {
 	#[serde(rename = "entity")]
 	/// The user session, called `'entity'` in the API
 	pub user_session: UserSession,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
 	/// The config files for the user session
 	pub config_files: Vec<ConfigFileData>,
 }
