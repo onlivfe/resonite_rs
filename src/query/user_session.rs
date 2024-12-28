@@ -73,7 +73,7 @@ impl From<UserSessionPasswordAuthentication> for UserSessionAuthentication {
 /// An identifier to use when requesting a session from the Resonite API.
 ///
 /// Used when logging in for example in
-/// [`LoginCredentials`](LoginCredentials::identifier).
+/// [`UserSession`](UserSession::identifier).
 pub enum LoginCredentialsIdentifier {
 	/// Identify using the username
 	Username(String),

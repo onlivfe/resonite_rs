@@ -138,6 +138,8 @@ pub struct Invocation {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	#[serde(default)]
 	/// The ID of the invocation
+	///
+	/// See <https://learn.microsoft.com/en-us/javascript/api/@microsoft/signalr/invocationmessage?view=signalr-js-latest#@microsoft-signalr-invocationmessage-invocationid>
 	pub invocation_id: Option<String>,
 	#[serde(flatten)]
 	/// Data of the invocation
