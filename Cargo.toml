@@ -33,32 +33,32 @@ signalr_client = ["http_client", "tokio", "ezsockets", "tokio-stream", "http", "
 rand_util = ["nanorand"]
 
 [dependencies]
-serde = { version = "1.0.210", features = ["derive"] }
-serde_with = { version = "3.9.0", features = ["json", "time_0_3"] }
-serde_json = { version = "1.0.128" }
-time = { version = "0.3.36", default-features = false, features = [
+serde = { version = "1.0.217", features = ["derive"] }
+serde_with = { version = "3.12.0", features = ["json", "time_0_3"] }
+serde_json = { version = "1.0.134" }
+time = { version = "0.3.37", default-features = false, features = [
   "serde-well-known",
 ] }
 strum = { version = "0.26.3", features = ["derive"] }
 
 # API client specifics
-racal = "0.4.0"
+racal = "0.5.0"
 #racal = { path = "../racal", features = ["reqwest"] }
 
 nanorand = { version = "0.7.0", optional = true }
 
-governor = { version = "0.6.3", optional = true }
+governor = { version = "0.8.0", optional = true }
 
-tokio = { version = "1.40.0", optional = true, features = ["macros"]}
-tokio-stream = { version = "0.1.16", optional = true}
-http = { version = "1.1.0", optional = true }
+tokio = { version = "1.42.0", optional = true, features = ["macros"]}
+tokio-stream = { version = "0.1.17", optional = true}
+http = { version = "1.2.0", optional = true }
 async-trait = { version = "0.1.83", optional = true }
 # Required to be defined by us since ezsockets doesn't expose a TLS feature
-tokio-tungstenite = {version = "0.24.0", optional= true, default-features = false, features = ["rustls-tls-webpki-roots"] }
+tokio-tungstenite = {version = "0.26.1", optional= true, default-features = false, features = ["rustls-tls-webpki-roots"] }
 
 [dependencies.reqwest]
 optional = true
-version = "0.12.7"
+version = "0.12.11"
 default-features = false
 features = ["json", "rustls-tls"]
 
@@ -70,7 +70,7 @@ features = ["client", "native_client", "rustls"]
 
 [dev-dependencies]
 tokio-test = "0.4.4"
-tokio = { version = "1.40.0", features = ["rt", "macros"] }
+tokio = { version = "1.42.0", features = ["rt", "macros"] }
 
 [package.metadata.docs.rs]
 all-features = true
