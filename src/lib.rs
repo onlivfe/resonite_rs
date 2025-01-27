@@ -13,6 +13,7 @@
 #![warn(missing_docs)]
 #![deny(rustdoc::invalid_html_tags)]
 #![warn(rustdoc::missing_doc_code_examples)]
+#![warn(rustdoc::missing_documentation)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::nursery)]
 // My project my choice, tabs are literally made for indentation, spaces not.
