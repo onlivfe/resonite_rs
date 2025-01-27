@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -13,22 +14,21 @@ use serde::{Deserialize, Serialize};
 	strum::AsRefStr,
 	strum::VariantNames,
 )]
-#[repr(u8)]
 /// The type of output device that the user is using.
 ///
 /// The API is inconsistent, sometimes representing this as a string and
 /// sometimes as a number.
 pub enum OutputDevice {
-	/// Output device not known
-	Unknown = 0,
+	/// In game camera
+	Camera = 3,
 	/// Desktop
 	Screen = 1,
+	/// Output device not known
+	Unknown = 0,
 	#[strum(to_string = "VR")]
 	#[serde(rename = "VR")]
 	/// Virtual Reality
 	Vr = 2,
-	/// In game camera
-	Camera = 3,
 }
 
 impl Default for OutputDevice {

@@ -5,36 +5,36 @@ use time::{OffsetDateTime, serde::rfc3339};
 #[serde(rename_all = "camelCase")]
 /// A message between two accounts
 pub struct Message {
-	/// An UUID prefixed with `MSG-`
-	pub id: String,
-	/// The owner, so most likely the logged in user
-	pub owner_id: crate::id::User,
-	/// The sender of the message
-	pub sender_id: crate::id::User,
-	/// If the user is focused on this session
-	pub recipient_id: crate::id::User,
-	#[serde(skip_serializing_if = "Option::is_none")]
-	/// The user session ID of the sender of the message
-	pub sender_user_session_id: Option<crate::id::UserSession>,
 	/// The contents of the message
 	#[serde(flatten)]
 	pub content: MessageContents,
-	#[serde(with = "rfc3339")]
-	/// When the message was sent
-	pub send_time: OffsetDateTime,
-	#[serde(with = "rfc3339")]
-	/// When the message was sent
-	pub last_update_time: OffsetDateTime,
-	#[serde(default)]
-	#[serde(with = "crate::util::opt_rfc3339")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	/// When the message was sent
-	pub read_time: Option<OffsetDateTime>,
+	/// An UUID prefixed with `MSG-`
+	pub id: String,
 	#[serde(default)]
 	/// If the message was from a migration
 	///
 	/// Defaults to false if missing
 	pub is_migrated: bool,
+	#[serde(with = "rfc3339")]
+	/// When the message was sent
+	pub last_update_time: OffsetDateTime,
+	/// The owner, so most likely the logged in user
+	pub owner_id: crate::id::User,
+	#[serde(default)]
+	#[serde(with = "crate::util::opt_rfc3339")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	/// When the message was sent
+	pub read_time: Option<OffsetDateTime>,
+	/// If the user is focused on this session
+	pub recipient_id: crate::id::User,
+	#[serde(with = "rfc3339")]
+	/// When the message was sent
+	pub send_time: OffsetDateTime,
+	/// The sender of the message
+	pub sender_id: crate::id::User,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	/// The user session ID of the sender of the message
+	pub sender_user_session_id: Option<crate::id::UserSession>,
 }
 
 impl Message {
@@ -81,6 +81,7 @@ impl Message {
 	}
 }
 
+#[repr(u8)]
 #[serde_with::serde_as]
 #[allow(clippy::module_name_repetitions)]
 #[derive(
@@ -89,19 +90,19 @@ impl Message {
 #[serde(tag = "messageType", content = "content")]
 /// The contents of a message combined with the `MessageType`
 pub enum MessageContents {
-	/// A normal message
-	Text(String),
 	/// A generic object Record message
 	Object(
 		#[serde_as(as = "serde_with::json::JsonString")] Box<crate::model::Record>,
-	),
-	/// Voice recording
-	Sound(
-		#[serde_as(as = "serde_with::json::JsonString")] Box<crate::model::Record>,
-	),
+	) = 3,
 	/// Invite to a session
 	SessionInvite(
 		#[serde_as(as = "serde_with::json::JsonString")]
 		Box<crate::model::SessionInfo>,
-	),
+	) = 2,
+	/// Voice recording
+	Sound(
+		#[serde_as(as = "serde_with::json::JsonString")] Box<crate::model::Record>,
+	) = 1,
+	/// A normal message
+	Text(String) = 0,
 }

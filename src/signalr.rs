@@ -11,6 +11,7 @@ use time::OffsetDateTime;
 
 // Modified version of code licensed under MIT from
 // https://github.com/yurivoronin/ngx-signalr-websocket/blob/ab6db75462e1a25306c2ffb821008649fd45d6e5/projects/ngx-signalr-websocket/src/lib/protocol.ts
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -26,23 +27,20 @@ use time::OffsetDateTime;
 #[serde(untagged)]
 /// The message type
 pub enum Message {
-	/// RPC call
-	Invocation {
+	/// Cancel RPC call
+	CancelInvocation {
 		#[serde(rename = "type")]
-		/// A hack to force serde to have this as `"type":1`
-		num: VariantNumber<1>,
+		/// A hack to force serde to have this as `"type":5`
+		num: VariantNumber<5>,
 		#[serde(flatten)]
-		/// The data for the invocation
-		data: Invocation,
+		/// The data for the invocation cancelling
+		data: CancelInvocation,
 	},
-	/// Data
-	StreamItem {
+	/// Closes connection
+	Close {
 		#[serde(rename = "type")]
-		/// A hack to force serde to have this as `"type":2`
-		num: VariantNumber<2>,
-		#[serde(flatten)]
-		/// The data for the stream item
-		data: serde_json::Value,
+		/// A hack to force serde to have this as `"type":7`
+		num: VariantNumber<7>,
 	},
 	/// Invocation completed
 	Completion {
@@ -53,6 +51,21 @@ pub enum Message {
 		/// The data for the invocation completion
 		data: serde_json::Value,
 	},
+	/// RPC call
+	Invocation {
+		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":1`
+		num: VariantNumber<1>,
+		#[serde(flatten)]
+		/// The data for the invocation
+		data: Invocation,
+	},
+	/// Keep the connection alive
+	Ping {
+		#[serde(rename = "type")]
+		/// A hack to force serde to have this as `"type":6`
+		num: VariantNumber<6>,
+	},
 	/// RPC call with streaming
 	StreamInvocation {
 		#[serde(rename = "type")]
@@ -62,26 +75,14 @@ pub enum Message {
 		/// The data for the stream invocation
 		data: serde_json::Value,
 	},
-	/// Cancel RPC call
-	CancelInvocation {
+	/// Data
+	StreamItem {
 		#[serde(rename = "type")]
-		/// A hack to force serde to have this as `"type":5`
-		num: VariantNumber<5>,
+		/// A hack to force serde to have this as `"type":2`
+		num: VariantNumber<2>,
 		#[serde(flatten)]
-		/// The data for the invocation cancelling
-		data: CancelInvocation,
-	},
-	/// Keep the connection alive
-	Ping {
-		#[serde(rename = "type")]
-		/// A hack to force serde to have this as `"type":6`
-		num: VariantNumber<6>,
-	},
-	/// Closes connection
-	Close {
-		#[serde(rename = "type")]
-		/// A hack to force serde to have this as `"type":7`
-		num: VariantNumber<7>,
+		/// The data for the stream item
+		data: serde_json::Value,
 	},
 }
 
@@ -134,18 +135,19 @@ pub struct CancelInvocation {
 #[serde(rename_all = "camelCase")]
 /// An invocation
 pub struct Invocation {
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
+	/// Data of the invocation
+	#[serde(flatten)]
+	pub data: InvocationData,
 	/// The ID of the invocation
 	///
 	/// See <https://learn.microsoft.com/en-us/javascript/api/@microsoft/signalr/invocationmessage?view=signalr-js-latest#@microsoft-signalr-invocationmessage-invocationid>
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
 	pub invocation_id: Option<String>,
-	#[serde(flatten)]
-	/// Data of the invocation
-	pub data: InvocationData,
 }
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -161,10 +163,10 @@ pub struct Invocation {
 #[serde(tag = "target", content = "arguments")]
 /// Data of an invocation
 pub enum InvocationData {
-	/// Data about a session update
-	ReceiveSessionUpdate((Box<crate::model::SessionInfo>,)),
 	/// Debug data
 	Debug((String,)),
+	/// Data about a session update
+	ReceiveSessionUpdate((Box<crate::model::SessionInfo>,)),
 	/// Session removal data
 	RemoveSession((crate::id::Session, OffsetDateTime)),
 	/// Not yet supported or failed serde parsing of the invocation

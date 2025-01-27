@@ -126,6 +126,7 @@ impl Session {
 	pub fn is_custom_user(&self) -> bool { self.0.starts_with("S-U-") }
 }
 
+#[repr(u8)]
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(untagged)]
 /// Any of the Resonite IDs
@@ -140,18 +141,18 @@ impl Session {
 /// assert!(id1 != id2);
 /// ```
 pub enum Any {
-	/// An user ID
-	User(User),
 	/// A group ID
-	Group(Group),
-	/// A session ID
-	Session(Session),
-	/// A record ID
-	Record(Record),
+	Group(Group) = 4,
 	/// A machine ID
-	Machine(Machine),
+	Machine(Machine) = 3,
+	/// A record ID
+	Record(Record) = 2,
+	/// A session ID
+	Session(Session) = 1,
+	/// An user ID
+	User(User) = 0,
 	/// An user session's ID
-	UserSession(UserSession),
+	UserSession(UserSession) = 5,
 }
 
 impl AsRef<str> for Any {
@@ -169,6 +170,7 @@ impl AsRef<str> for Any {
 	}
 }
 
+#[repr(u8)]
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(untagged)]
 /// Resonite IDs that can own records for example
@@ -183,12 +185,12 @@ impl AsRef<str> for Any {
 /// assert!(id1 != id2);
 /// ```
 pub enum Owner {
-	/// An user ID
-	User(User),
 	/// A group ID
-	Group(Group),
+	Group(Group) = 2,
 	/// A machine ID
-	Machine(Machine),
+	Machine(Machine) = 1,
+	/// An user ID
+	User(User) = 0,
 }
 
 impl AsRef<str> for Owner {

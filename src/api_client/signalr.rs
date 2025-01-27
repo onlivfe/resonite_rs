@@ -21,14 +21,14 @@ pub type ReceiverContainer = std::sync::Arc<
 
 /// A `SignalR` (`WebSocket`) API client
 pub struct ResoniteSignalRClient {
-	receive: ReceiverContainer,
 	handle: JoinSet<()>,
 	internal_client: ezsockets::Client<InternalClientExt>,
+	receive: ReceiverContainer,
 }
 
 struct InternalClientExt {
-	received_sender: UnboundedSender<ListenMessageResult>,
 	connected_sender: UnboundedSender<bool>,
+	received_sender: UnboundedSender<ListenMessageResult>,
 }
 
 impl InternalClientExt {
@@ -105,7 +105,7 @@ impl ResoniteSignalRClient {
 			tokio::sync::mpsc::unbounded_channel::<bool>();
 
 		let (internal_client, future) = ezsockets::connect(
-			|_client| InternalClientExt { received_sender, connected_sender },
+			|_client| InternalClientExt { connected_sender, received_sender },
 			ws_config,
 		)
 		.await;

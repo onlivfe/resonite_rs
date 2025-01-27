@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -15,10 +16,10 @@ use serde::{Deserialize, Serialize};
 )]
 /// The type of a ban.
 pub enum PublicBanType {
-	/// A standard ban
-	Standard,
-	/// A soft ban
-	Soft,
 	/// A hard ban
-	Hard,
+	Hard = 2,
+	/// A soft ban
+	Soft = 1,
+	/// A standard ban
+	Standard = 0,
 }

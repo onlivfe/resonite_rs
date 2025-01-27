@@ -12,10 +12,6 @@ use time::{OffsetDateTime, serde::rfc3339};
 ///
 /// The response from the API at POST `userSessions`.
 pub struct UserSession {
-	/// The Resonite user that this session is for
-	pub user_id: crate::id::User,
-	/// The secret token of this session
-	pub token: String,
 	#[serde(rename = "created")]
 	#[serde(with = "rfc3339")]
 	/// When the user session was created
@@ -24,28 +20,6 @@ pub struct UserSession {
 	#[serde(with = "rfc3339")]
 	/// When the user session is set to expire
 	pub expiration_time: OffsetDateTime,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// Returned when creating a new session
-	pub secret_machine_id_hash: Option<String>,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// Returned when creating a new session
-	pub secret_machine_id_salt: Option<String>,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// Returned when creating a new session
-	pub uid_hash: Option<String>,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// Returned when creating a new session
-	pub uid_salt: Option<String>,
-	/// If the user session has the remember me checked (lives longer)
-	pub remember_me: bool,
 	/// If the user session has is bound to the specific machine ID
 	pub is_machine_bound: bool,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
@@ -60,8 +34,34 @@ pub struct UserSession {
 	pub logout_url_client_side: bool,
 	/// How the user session was originally created
 	pub original_login_type: UserSessionLoginType,
+	/// If the user session has the remember me checked (lives longer)
+	pub remember_me: bool,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	/// Returned when creating a new session
+	pub secret_machine_id_hash: Option<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	/// Returned when creating a new session
+	pub secret_machine_id_salt: Option<String>,
 	/// How many times the session has been used
 	pub session_login_counter: u64,
+	/// The secret token of this session
+	pub token: String,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	/// Returned when creating a new session
+	pub uid_hash: Option<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	/// Returned when creating a new session
+	pub uid_salt: Option<String>,
+	/// The Resonite user that this session is for
+	pub user_id: crate::id::User,
 }
 
 impl std::fmt::Debug for UserSession {
@@ -93,6 +93,7 @@ impl UserSession {
 	}
 }
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -109,15 +110,19 @@ impl UserSession {
 )]
 /// The login type for an user's (auth) session
 pub enum UserSessionLoginType {
+	/// The login was created from a migration
+	Migration = 3,
+	/// The login was created with a password
+	Password = 1,
+	/// The login was created with saml2
+	Saml2 = 2,
 	#[serde(rename = "UNKNOWN")]
 	/// The login type is not known
-	Unknown,
-	/// The login was created with a password
-	Password,
-	/// The login was created with saml2
-	Saml2,
-	/// The login was created from a migration
-	Migration,
+	Unknown = 0,
+}
+
+impl Default for UserSessionLoginType {
+	fn default() -> Self { Self::Unknown }
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
@@ -125,9 +130,9 @@ pub enum UserSessionLoginType {
 /// Config file data that's returned when requesting an user session
 pub struct ConfigFileData {
 	/// Supposedly path to where the config file should be stored
-	pub path: String,
-	/// Supposedly path to where the config file should be stored
 	pub content: String,
+	/// Supposedly path to where the config file should be stored
+	pub path: String,
 }
 
 impl std::fmt::Debug for ConfigFileData {
@@ -144,15 +149,16 @@ impl std::fmt::Debug for ConfigFileData {
 #[serde(rename_all = "camelCase")]
 /// Result from the API when requesting an user session
 pub struct UserSessionResult {
-	#[serde(rename = "entity")]
-	/// The user session, called `'entity'` in the API
-	pub user_session: UserSession,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// The config files for the user session
 	pub config_files: Vec<ConfigFileData>,
+	#[serde(rename = "entity")]
+	/// The user session, called `'entity'` in the API
+	pub user_session: UserSession,
 }
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -169,14 +175,18 @@ pub struct UserSessionResult {
 )]
 ///Type of the user session
 pub enum UserSessionType {
-	/// Unknown user session type
-	Unknown,
-	/// Standard game client
-	GraphicalClient,
-	/// Special chat client
-	ChatClient,
-	/// Host of sessions
-	Headless,
 	/// Automated agent
-	Bot,
+	Bot = 4,
+	/// Special chat client
+	ChatClient = 3,
+	/// Standard game client
+	GraphicalClient = 1,
+	/// Host of sessions
+	Headless = 2,
+	/// Unknown user session type
+	Unknown = 0,
+}
+
+impl Default for UserSessionType {
+	fn default() -> Self { Self::Unknown }
 }

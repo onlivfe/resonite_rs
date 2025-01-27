@@ -13,6 +13,10 @@ So this crate can't guarantee correctness.
 
 This crate provides an example API client with the optional `http_client` & `signalr_client` features.
 
+For programming style, beyond the clippy lints & rustfmt's automatic formatting:
+[Doc comments should come before attributes](https://github.com/rust-lang/rust/tree/HEAD/src/doc/style-guide/src#doc-comments).
+I'm hoping that [someday rustfmt will gain the ability to automate that](https://github.com/rust-lang/rustfmt/issues/3744).
+
 ## Testing
 
 The integration tests will contact the live API.

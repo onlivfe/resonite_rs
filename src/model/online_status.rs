@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -15,18 +16,22 @@ use serde::{Deserialize, Serialize};
 )]
 /// The online status of a Resonite user.
 pub enum OnlineStatus {
-	/// The user is offline
-	Offline,
-	/// The user is invisible
-	Invisible,
 	/// The user is away
-	Away,
+	Away = 2,
 	/// The user is busy offline
-	Busy,
+	Busy = 3,
+	/// The user is invisible
+	Invisible = 1,
+	/// The user is offline
+	Offline = 0,
 	/// The user is online
-	Online,
+	Online = 4,
 	/// The user is sociable
-	Sociable,
+	Sociable = 5,
+}
+
+impl Default for OnlineStatus {
+	fn default() -> Self { Self::Offline }
 }
 
 impl OnlineStatus {

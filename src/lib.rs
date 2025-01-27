@@ -16,6 +16,7 @@
 #![warn(rustdoc::missing_documentation)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::nursery)]
+#![warn(clippy::arbitrary_source_item_ordering)]
 // My project my choice, tabs are literally made for indentation, spaces not.
 #![allow(clippy::tabs_in_doc_comments)]
 // Not much can be done about it :/

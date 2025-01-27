@@ -9,55 +9,21 @@ use super::AssemblyInfo;
 #[serde(rename_all = "camelCase")]
 /// A Resonite session, often called an instance on other platforms.
 pub struct SessionInfo {
-	/// The name of the session
-	pub name: String,
+	/// Who can access the session
+	pub access_level: crate::model::SessionAccessLevel,
+	/// The amount of users that are focused on the session
+	pub active_users: u8,
+	/// The version of Resonite that session is hosting
+	pub app_version: String,
+	/// Streaming related probably?
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
-	/// The description of the session
-	///
-	/// Defaulted to empty string if the API returns none for the session.
-	pub description: String,
-	#[serde(rename = "correspondingWorldId")]
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// The ID of the session's world
-	pub world: Option<crate::model::RecordId>,
-	#[serde(default)]
-	/// The tags of the session
-	pub tags: Vec<String>,
-	#[serde(rename = "sessionId")]
-	/// The ID of the session (`S-{uuid}` for example)
-	pub id: crate::id::Session,
-	#[serde(rename = "normalizedSessionId")]
-	/// Normalized (capitalization) version of the session's id (`s-{uuid}` for
-	/// example)
-	pub normalized_id: String,
-	#[serde(rename = "hostUserId")]
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// The ID of the session's host (`U-{uuid}` for example)
-	pub host_id: Option<crate::id::User>,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// The ID of the host user's session
-	pub host_user_session_id: Option<crate::id::UserSession>,
-	/// The ID of the session's host's machine (`{uuid}`)
-	pub host_machine_id: String,
-	/// The username of the session's host
-	pub host_username: String,
+	pub broadcast_key: bool,
 	#[serde(default)]
 	/// A hash to check if the session is compatible (version, plugins, etc)
 	///
 	/// Defaults to an empty string if missing
 	pub compatibility_hash: String,
-	#[serde(default)]
-	/// A hash to check if the session is compatible system wise
-	///
-	/// Defaults to an empty string if missing
-	pub system_compatibility_hash: String,
 	#[serde(default)]
 	/// Assemblies to check for compatibility
 	///
@@ -65,51 +31,10 @@ pub struct SessionInfo {
 	pub data_model_assemblies: Vec<AssemblyInfo>,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
-	/// Which Resonite "universe" the session is in
+	/// The description of the session
 	///
-	/// Defaults to empty string if missing
-	pub universe_id: String,
-	/// The version of Resonite that session is hosting
-	pub app_version: String,
-	#[serde(rename = "headlessHost")]
-	/// If the host is a headless (server) instance or not.
-	pub is_headless_host: bool,
-	#[serde(rename = "sessionURLs")]
-	/// Links to the session, in custom protocols such as `lnl-nat:///` and
-	/// `res-steam://`
-	pub urls: Vec<String>,
-	#[serde(rename = "sessionUsers")]
-	/// A list of the session's users very basic details.
-	pub users: Vec<crate::model::SessionUser>,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	#[serde(default)]
-	/// A link to the thumbnail of the session.
-	///
-	/// Can be `https://` or `neosdb://` for example
-	pub thumbnail_url: Option<crate::AssetUrl>,
-	/// The amount of users that have joined the session
-	pub joined_users: u8,
-	/// The amount of users that are focused on the session
-	pub active_users: u8,
-	/// Total of `joined_users`..?
-	pub total_joined_users: u8,
-	/// Total of `active_users`...?
-	pub total_active_users: u8,
-	/// The max limit of users in the session
-	pub max_users: u8,
-	#[serde(rename = "mobileFriendly")]
-	/// If the session is suitable for mobile clients
-	pub is_mobile_friendly: bool,
-	#[serde(with = "rfc3339")]
-	/// When the session began
-	pub session_begin_time: OffsetDateTime,
-	#[serde(rename = "lastUpdate")]
-	#[serde(with = "rfc3339")]
-	/// When the session was last updated
-	pub last_update_time: OffsetDateTime,
-	/// Who can access the session
-	pub access_level: crate::model::SessionAccessLevel,
+	/// Defaulted to empty string if the API returns none for the session.
+	pub description: String,
 	/// If the session has ended
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default = "has_ended_default")]
@@ -118,26 +43,102 @@ pub struct SessionInfo {
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	pub hide_from_listing: bool,
-	/// Streaming related probably?
+	#[serde(rename = "hostUserId")]
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	#[serde(default)]
-	pub broadcast_key: bool,
+	/// The ID of the session's host (`U-{uuid}` for example)
+	pub host_id: Option<crate::id::User>,
+	/// The ID of the session's host's machine (`{uuid}`)
+	pub host_machine_id: String,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	/// The ID of the host user's session
+	pub host_user_session_id: Option<crate::id::UserSession>,
+	/// The username of the session's host
+	pub host_username: String,
+	#[serde(rename = "sessionId")]
+	/// The ID of the session (`S-{uuid}` for example)
+	pub id: crate::id::Session,
+
+	#[serde(rename = "headlessHost")]
+	/// If the host is a headless (server) instance or not.
+	pub is_headless_host: bool,
+	#[serde(rename = "mobileFriendly")]
+	/// If the session is suitable for mobile clients
+	pub is_mobile_friendly: bool,
 	/// If the session is valid
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	pub is_valid: bool,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(default)]
-	/// Sessions that this session is a child of
-	///
-	/// Defaulted to empty vector if the API returns none for the session.
-	pub parent_session_ids: Vec<crate::id::Session>,
+	/// The amount of users that have joined the session
+	pub joined_users: u8,
+	#[serde(rename = "lastUpdate")]
+	#[serde(with = "rfc3339")]
+	/// When the session was last updated
+	pub last_update_time: OffsetDateTime,
+	/// The max limit of users in the session
+	pub max_users: u8,
+	/// The name of the session
+	pub name: String,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// Sessions that are the child of this session
 	///
 	/// Defaulted to empty vector if the API returns none for the session.
 	pub nested_session_ids: Vec<crate::id::Session>,
+	#[serde(rename = "normalizedSessionId")]
+	/// Normalized (capitalization) version of the session's id (`s-{uuid}` for
+	/// example)
+	pub normalized_id: String,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
+	/// Sessions that this session is a child of
+	///
+	/// Defaulted to empty vector if the API returns none for the session.
+	pub parent_session_ids: Vec<crate::id::Session>,
+	#[serde(with = "rfc3339")]
+	/// When the session began
+	pub session_begin_time: OffsetDateTime,
+	#[serde(default)]
+	/// A hash to check if the session is compatible system wise
+	///
+	/// Defaults to an empty string if missing
+	pub system_compatibility_hash: String,
+	#[serde(default)]
+	/// The tags of the session
+	pub tags: Vec<String>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	/// A link to the thumbnail of the session.
+	///
+	/// Can be `https://` or `neosdb://` for example
+	pub thumbnail_url: Option<crate::AssetUrl>,
+	/// Total of `active_users`...?
+	pub total_active_users: u8,
+	/// Total of `joined_users`..?
+	pub total_joined_users: u8,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
+	/// Which Resonite "universe" the session is in
+	///
+	/// Defaults to empty string if missing
+	pub universe_id: String,
+	#[serde(rename = "sessionURLs")]
+	/// Links to the session, in custom protocols such as `lnl-nat:///` and
+	/// `res-steam://`
+	pub urls: Vec<String>,
+	#[serde(rename = "sessionUsers")]
+	/// A list of the session's users very basic details.
+	pub users: Vec<crate::model::SessionUser>,
+	#[serde(rename = "correspondingWorldId")]
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	/// The ID of the session's world
+	pub world: Option<crate::model::RecordId>,
 }
 
 // If the field is missing, it probably has ended...

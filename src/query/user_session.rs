@@ -25,6 +25,7 @@ pub struct UserSessionTokenAuthentication {
 	pub session_token: String,
 }
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -58,6 +59,7 @@ impl From<UserSessionPasswordAuthentication> for UserSessionAuthentication {
 	}
 }
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -75,13 +77,13 @@ impl From<UserSessionPasswordAuthentication> for UserSessionAuthentication {
 /// Used when logging in for example in
 /// [`UserSession`](UserSession::identifier).
 pub enum LoginCredentialsIdentifier {
-	/// Identify using the username
-	Username(String),
+	/// Identify using an email address
+	Email(String),
 	#[serde(rename = "ownerID")]
 	/// Identify using the user's ID
 	OwnerID(String),
-	/// Identify using an email address
-	Email(String),
+	/// Identify using the username
+	Username(String),
 }
 
 impl LoginCredentialsIdentifier {
@@ -118,15 +120,15 @@ impl LoginCredentialsIdentifier {
 #[serde(rename_all = "camelCase")]
 /// A login request body's data.
 pub struct UserSession {
+	/// The authentication for the request
+	pub authentication: UserSessionAuthentication,
 	#[serde(flatten)]
 	/// The way to identify the user account the request is for
 	pub identifier: LoginCredentialsIdentifier,
-	/// The authentication for the request
-	pub authentication: UserSessionAuthentication,
-	/// Can be a random UUID
-	pub secret_machine_id: String,
 	/// If the session should be valid for 30 days
 	pub remember_me: bool,
+	/// Can be a random UUID
+	pub secret_machine_id: String,
 }
 
 impl Queryable<Authenticating, crate::model::UserSessionResult>

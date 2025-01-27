@@ -8,16 +8,16 @@ use super::Authentication;
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 /// Query the messages for a specific user
 pub struct Messages {
-	/// Max amount of messages to retrieve,
-	/// most likely capped server side to a smaller value
-	pub max_amount: u16,
-	/// If to fetch only unread messages
-	pub unread_only: bool,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// If to only query messages that were sent after a certain time
 	pub from_time: Option<OffsetDateTime>,
+	/// Max amount of messages to retrieve,
+	/// most likely capped server side to a smaller value
+	pub max_amount: u16,
+	/// If to fetch only unread messages
+	pub unread_only: bool,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]

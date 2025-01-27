@@ -3,10 +3,10 @@ use std::fmt::Display;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 /// An URI for a Resonite asset such as a profile picture.
 pub struct AssetUrl {
-	/// The last URL part without the file extension
-	id: String,
 	/// The file extension
 	ext: Option<String>,
+	/// The last URL part without the file extension
+	id: String,
 	is_resdb: bool,
 	/// The URL before the last URL part
 	url_prefix: String,
@@ -37,7 +37,7 @@ impl AssetUrl {
 			(ext_split_rest, Some(ext_split_last))
 		};
 
-		Ok(Self { id, ext, is_resdb, url_prefix })
+		Ok(Self { ext, id, is_resdb, url_prefix })
 	}
 }
 
@@ -63,6 +63,10 @@ impl TryFrom<&str> for AssetUrl {
 
 impl AssetUrl {
 	#[must_use]
+	/// Gets the extension
+	pub const fn ext(&self) -> &Option<String> { &self.ext }
+
+	#[must_use]
 	/// Gets the file's name
 	pub fn filename(&self) -> String {
 		self
@@ -71,6 +75,8 @@ impl AssetUrl {
 			.map_or_else(|| self.id.clone(), |ext| self.id.clone() + ext)
 	}
 
+	// Lint is wrong, not possible before `.as_str()` is stabilized
+	#[allow(clippy::missing_const_for_fn)]
 	#[must_use]
 	/// Gets the file's name without the extension
 	pub fn id(&self) -> &str { &self.id }
@@ -83,10 +89,6 @@ impl AssetUrl {
 			_ => self.url_prefix.clone() + &self.id,
 		}
 	}
-
-	#[must_use]
-	/// Gets the extension
-	pub const fn ext(&self) -> &Option<String> { &self.ext }
 }
 
 impl Display for AssetUrl {

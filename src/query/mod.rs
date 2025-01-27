@@ -89,13 +89,6 @@ impl FromApiState<Self> for Authentication {
 /// Contains the data needed to actually request an user session.
 /// Mixes headers and actual body data together, not an actual Resonite model.
 pub struct Authenticating {
-	#[serde(rename = "UID")]
-	/// Unique identifier header.
-	///
-	/// Should be a SHA256 hash of the hardware.
-	/// Could be any SHA256, but API will treat this as a different device based
-	/// on the value of this.
-	pub unique_machine_identifier: String,
 	#[serde(rename = "TOTP")]
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
@@ -106,6 +99,13 @@ pub struct Authenticating {
 	/// Only needed in some cases, with first requirement being having
 	/// second factor authentication even enabled for the account.
 	pub second_factor: Option<String>,
+	#[serde(rename = "UID")]
+	/// Unique identifier header.
+	///
+	/// Should be a SHA256 hash of the hardware.
+	/// Could be any SHA256, but API will treat this as a different device based
+	/// on the value of this.
+	pub unique_machine_identifier: String,
 }
 
 impl FromApiState<Self> for Authenticating {

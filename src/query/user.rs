@@ -6,6 +6,7 @@ use super::NoAuthentication;
 /// An user's ID or their username
 ///
 /// Used in [`UserInfo`](resonite::query::UserInfo).
+#[repr(u8)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum UserIdOrUsername {
 	/// An user's ID

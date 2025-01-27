@@ -35,19 +35,20 @@ mod signalr;
 pub use signalr::*;
 
 /// An error that may happen with an API query
+#[repr(u8)]
 #[derive(Debug)]
 pub enum ApiError {
-	/// An error happened with serialization
-	Serde(serde_json::Error),
 	/// An error happened with the HTTPS request
 	#[cfg(feature = "http_client")]
 	Http(reqwest::Error),
-	/// An error happened with the WS connection
-	#[cfg(feature = "signalr_client")]
-	WebSocket(ezsockets::Error),
 	/// An error happened with sending `SignalR` data
 	#[cfg(feature = "signalr_client")]
 	Other(String),
+	/// An error happened with serialization
+	Serde(serde_json::Error),
+	/// An error happened with the WS connection
+	#[cfg(feature = "signalr_client")]
+	WebSocket(ezsockets::Error),
 }
 
 impl From<serde_json::Error> for ApiError {

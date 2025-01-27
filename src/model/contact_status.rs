@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -14,16 +16,14 @@ use serde::{Deserialize, Serialize};
 )]
 /// The friendship status with a Resonite user
 pub enum ContactStatus {
-	/// Not friends
-	None,
-	/// Apparently possible value too..?
-	SearchResult,
-	/// The user has requested friendship
-	Requested,
-	/// Ignored the friendship request
-	Ignored,
 	/// User has been blocked
-	Blocked,
-	/// Accepted the user as a friend
-	Accepted,
+	Blocked = 4,
+	/// Ignored the friendship request
+	Ignored = 3,
+	/// Not friends
+	None = 0,
+	/// The user has requested friendship
+	Requested = 2,
+	/// Apparently possible value too..?
+	SearchResult = 1,
 }

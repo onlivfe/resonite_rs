@@ -2,6 +2,7 @@ use std::fmt;
 
 use serde::de::{self, Deserialize, Deserializer, Visitor};
 
+#[repr(u8)]
 #[derive(
 	Debug,
 	Clone,
@@ -17,19 +18,14 @@ use serde::de::{self, Deserialize, Deserializer, Visitor};
 	strum::AsRefStr,
 	strum::VariantNames,
 )]
-#[repr(u8)]
 /// A Resonite session's access level.
 ///
 /// The API is inconsistent, sometimes representing this as a string and
 /// sometimes as a number.
 pub enum SessionAccessLevel {
 	#[strum(ascii_case_insensitive)]
-	/// The session is private
-	Private = 0,
-	#[strum(ascii_case_insensitive)]
-	#[strum(serialize = "LAN", serialize = "LAN")]
-	/// The session is accessible trough LAN
-	Lan = 1,
+	/// The session is accessible to anyone
+	Anyone = 5,
 	#[strum(ascii_case_insensitive)]
 	#[serde(alias = "friends")]
 	/// The session is accessible to the friends of the host
@@ -39,11 +35,15 @@ pub enum SessionAccessLevel {
 	/// The session is accessible to anyone with friends in the session
 	ContactsPlus = 3,
 	#[strum(ascii_case_insensitive)]
+	#[strum(serialize = "LAN", serialize = "LAN")]
+	/// The session is accessible trough LAN
+	Lan = 1,
+	#[strum(ascii_case_insensitive)]
+	/// The session is private
+	Private = 0,
+	#[strum(ascii_case_insensitive)]
 	/// The session is accessible to anyone who has registered an user account
 	RegisteredUsers = 4,
-	#[strum(ascii_case_insensitive)]
-	/// The session is accessible to anyone
-	Anyone = 5,
 }
 
 // Allow the SessionAccessLevel to be either represented as a string or number

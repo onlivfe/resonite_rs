@@ -10,13 +10,8 @@ pub struct UserProfile {
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
-	/// The URI seems to be in a Resonite's own link format
-	pub icon_url: Option<crate::AssetUrl>,
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(default)]
-	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Custom text of the user
-	pub tagline: Option<String>,
+	pub description: Option<String>,
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// Badges to display for the user
@@ -26,6 +21,11 @@ pub struct UserProfile {
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
+	/// The URI seems to be in a Resonite's own link format
+	pub icon_url: Option<crate::AssetUrl>,
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	/// Custom text of the user
-	pub description: Option<String>,
+	pub tagline: Option<String>,
 }

@@ -45,9 +45,9 @@ fn http_rate_limiter() -> NormalRateLimiter {
 
 /// The main API client without authentication
 pub struct UnauthenticatedResonite {
-	user_agent: String,
 	http: Client,
 	rate_limiter: NormalRateLimiter,
+	user_agent: String,
 }
 
 #[async_trait::async_trait]
@@ -107,10 +107,10 @@ impl ApiClient<Authenticating> for AuthenticatingResonite {
 
 /// The main API client with authentication
 pub struct AuthenticatedResonite {
-	user_agent: String,
+	auth: Authentication,
 	http: Client,
 	rate_limiter: NormalRateLimiter,
-	auth: Authentication,
+	user_agent: String,
 }
 
 #[async_trait::async_trait]
