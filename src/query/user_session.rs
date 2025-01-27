@@ -205,13 +205,13 @@ fn user_session_token_auth() {
 #[test]
 fn user_session() {
 	let expected_string = r#"{
-  "username": "ljoonal",
   "authentication": {
     "$type": "password",
     "password": "totally-my-password"
   },
-  "secretMachineId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "rememberMe": true
+  "username": "ljoonal",
+  "rememberMe": true,
+  "secretMachineId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 }"#;
 	let user_session_query: UserSession =
 		serde_json::from_str(expected_string).unwrap();
