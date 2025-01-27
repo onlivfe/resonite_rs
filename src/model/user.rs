@@ -1,11 +1,18 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::{OffsetDateTime, serde::rfc3339};
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Details about a Resonite user.
 pub struct User {
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -24,6 +31,10 @@ pub struct User {
 	///
 	/// Defaulted to empty array
 	pub alternate_normalized_names: Vec<String>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -38,6 +49,10 @@ pub struct User {
 	/// The email address of the user.
 	/// Only visible when logged in.
 	pub email: Option<String>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::JsonValue")
+	)]
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// Patreon related.
@@ -48,14 +63,30 @@ pub struct User {
 	pub id: crate::id::User,
 	/// If the account is verified
 	pub is_verified: bool,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the listing ban expires
 	pub listing_ban_expiration: Option<OffsetDateTime>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::JsonValue")
+	)]
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::JsonValue")
+	)]
 	#[serde(default)]
 	/// Migration related
 	pub migrated_data: serde_json::Value,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -77,6 +108,10 @@ pub struct User {
 	///
 	/// Defaulted to empty array
 	pub old_usernames: Vec<String>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::JsonValue")
+	)]
 	#[serde(default)]
 	/// Data about the user's Patreon subscription
 	pub patreon_data: serde_json::Value,
@@ -85,6 +120,10 @@ pub struct User {
 	#[serde(default)]
 	/// The profile of the user
 	pub profile: Option<crate::model::UserProfile>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -107,15 +146,27 @@ pub struct User {
 	#[serde(default)]
 	/// If referred to Resonite by some other user
 	pub referrer_user_id: Option<crate::id::User>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(rename = "registrationDate")]
 	#[serde(with = "rfc3339")]
 	/// When the user registered their Resonite account.
 	pub registration_time: OffsetDateTime,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the spectator ban expires
 	pub spectator_ban_expiration: Option<OffsetDateTime>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::JsonValue")
+	)]
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	/// Patreon related.

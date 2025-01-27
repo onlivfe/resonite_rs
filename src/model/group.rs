@@ -1,5 +1,8 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Details about a Resonite group.

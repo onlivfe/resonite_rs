@@ -7,6 +7,8 @@ use governor::{
 	middleware::NoOpMiddleware,
 	state::{InMemoryState, NotKeyed},
 };
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 pub use racal::reqwest::ApiClient;
 use reqwest::{
 	Client,
@@ -21,10 +23,11 @@ use crate::query::{Authenticating, Authentication, NoAuthentication};
 type NormalRateLimiter =
 	RateLimiter<NotKeyed, InMemoryState, DefaultClock, NoOpMiddleware>;
 
-#[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 /// Data needed to actually request an user session.
 ///
 /// Mixes headers and actual body data together, not an actual Resonite model.
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 pub struct UserSessionQueryWithHeaders {
 	/// The actual body of the request
 	pub body: crate::query::UserSession,

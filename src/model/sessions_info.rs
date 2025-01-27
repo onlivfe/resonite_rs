@@ -1,7 +1,10 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use time::{OffsetDateTime, serde::rfc3339};
 
 use super::AssemblyInfo;
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(
 	Debug, Clone, PartialEq, Eq, Hash, serde::Deserialize, serde::Serialize,
@@ -74,6 +77,10 @@ pub struct SessionInfo {
 	pub is_valid: bool,
 	/// The amount of users that have joined the session
 	pub joined_users: u8,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(rename = "lastUpdate")]
 	#[serde(with = "rfc3339")]
 	/// When the session was last updated
@@ -98,6 +105,10 @@ pub struct SessionInfo {
 	///
 	/// Defaulted to empty vector if the API returns none for the session.
 	pub parent_session_ids: Vec<crate::id::Session>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(with = "rfc3339")]
 	/// When the session began
 	pub session_begin_time: OffsetDateTime,

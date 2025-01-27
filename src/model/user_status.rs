@@ -1,8 +1,11 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 use super::UserSessionType;
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -29,12 +32,20 @@ pub struct UserStatus {
 	pub is_mobile: bool,
 	/// If the user is present or not
 	pub is_present: bool,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(rename = "lastPresenceTimestamp")]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
 	/// When the user was last present
 	pub last_presence_time: Option<OffsetDateTime>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(rename = "lastStatusChange")]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]

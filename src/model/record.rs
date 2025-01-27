@@ -1,8 +1,11 @@
 use std::collections::HashSet;
 
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::{OffsetDateTime, serde::rfc3339};
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(Debug, PartialEq, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -15,6 +18,10 @@ pub struct Record {
 	pub asset_manifest: Vec<crate::model::DBAsset>,
 	/// The URI that this record points to
 	pub asset_uri: crate::AssetUrl,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -26,6 +33,10 @@ pub struct Record {
 	///
 	/// Defaults to an empty string if null/none in the API.
 	pub description: String,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -41,6 +52,10 @@ pub struct Record {
 	pub is_listed: bool,
 	/// If the record is public or not
 	pub is_public: bool,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(with = "rfc3339")]
 	/// When the record was last modified at
 	pub last_modification_time: OffsetDateTime,
@@ -87,6 +102,7 @@ pub struct Record {
 	pub visits: u32,
 }
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Versioning for a record

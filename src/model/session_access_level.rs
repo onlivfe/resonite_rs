@@ -1,8 +1,11 @@
 use std::fmt;
 
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::de::{self, Deserialize, Deserializer, Visitor};
 
 #[repr(u8)]
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(
 	Debug,
 	Clone,

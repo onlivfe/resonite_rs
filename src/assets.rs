@@ -1,5 +1,9 @@
 use std::fmt::Display;
 
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
+
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 /// An URI for a Resonite asset such as a profile picture.
 pub struct AssetUrl {

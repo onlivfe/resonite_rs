@@ -1,7 +1,10 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use time::{OffsetDateTime, serde::rfc3339};
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_as]
 #[derive(Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -12,10 +15,18 @@ use time::{OffsetDateTime, serde::rfc3339};
 ///
 /// The response from the API at POST `userSessions`.
 pub struct UserSession {
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(rename = "created")]
 	#[serde(with = "rfc3339")]
 	/// When the user session was created
 	pub creation_time: OffsetDateTime,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(rename = "expire")]
 	#[serde(with = "rfc3339")]
 	/// When the user session is set to expire
@@ -94,6 +105,7 @@ impl UserSession {
 }
 
 #[repr(u8)]
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(
 	Debug,
 	Clone,
@@ -125,6 +137,7 @@ impl Default for UserSessionLoginType {
 	fn default() -> Self { Self::Unknown }
 }
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Config file data that's returned when requesting an user session
@@ -144,6 +157,7 @@ impl std::fmt::Debug for ConfigFileData {
 	}
 }
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -159,6 +173,7 @@ pub struct UserSessionResult {
 }
 
 #[repr(u8)]
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(
 	Debug,
 	Clone,

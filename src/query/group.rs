@@ -1,9 +1,12 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use racal::Queryable;
 use serde::{Deserialize, Serialize};
 
 use super::NoAuthentication;
 
 /// Gets details of publicly listed sessions
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct GroupInfo {
 	/// The ID of the group to query information about

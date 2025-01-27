@@ -6,6 +6,8 @@
 // for easier navigation & better development experience.
 #![allow(clippy::module_name_repetitions)]
 
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use racal::FromApiState;
 use serde::{Deserialize, Serialize};
 
@@ -44,6 +46,7 @@ impl racal::FromApiState<Authentication> for NoAuthentication {
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
 /// With authentication
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 pub struct Authentication {
 	/// The secret authentication token
@@ -82,29 +85,30 @@ impl FromApiState<Self> for Authentication {
 	fn from_state(state: &Self) -> &Self { state }
 }
 
-#[serde_with::serde_as]
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
 /// Contains the data needed to actually request an user session.
 /// Mixes headers and actual body data together, not an actual Resonite model.
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[serde_with::serde_as]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 pub struct Authenticating {
-	#[serde(rename = "TOTP")]
-	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
-	#[serde(default)]
-	#[serde(skip_serializing_if = "Option::is_none")]
 	/// TOTP header.
 	///
 	/// Usually should be composed of just a few numbers.
 	/// Only needed in some cases, with first requirement being having
 	/// second factor authentication even enabled for the account.
+	#[serde(rename = "TOTP")]
+	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
+	#[serde(default)]
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub second_factor: Option<String>,
-	#[serde(rename = "UID")]
 	/// Unique identifier header.
 	///
 	/// Should be a SHA256 hash of the hardware.
 	/// Could be any SHA256, but API will treat this as a different device based
 	/// on the value of this.
+	#[serde(rename = "UID")]
 	pub unique_machine_identifier: String,
 }
 

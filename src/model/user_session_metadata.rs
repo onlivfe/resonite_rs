@@ -1,3 +1,7 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
+
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(
 	Debug, Clone, PartialEq, Eq, Hash, serde::Deserialize, serde::Serialize,

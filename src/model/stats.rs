@@ -1,11 +1,14 @@
 use std::collections::HashMap;
 
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 use time::serde::rfc3339;
 
 use super::{SessionAccessLevel, UserSessionType};
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Statistics related to users/sessions/etc that are online
@@ -21,6 +24,10 @@ pub struct OnlineStatistics {
 	#[serde(rename = "awayUsers")]
 	/// How many users are currently away
 	pub away_user_count: u32,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(with = "rfc3339")]
 	/// When the statistics were captured
 	pub capture_timestamp: OffsetDateTime,
@@ -70,6 +77,7 @@ pub struct OnlineStatistics {
 	pub vr_user_count: u32,
 }
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[derive(Debug, PartialEq, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Statistics related to the cloud
@@ -78,6 +86,10 @@ pub struct CloudStatistics {
 	pub asset_metadata_jobs: u32,
 	/// Statistic about the jobs count
 	pub asset_variant_jobs: u32,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(with = "rfc3339")]
 	/// When the statistics were captured
 	pub capture_timestamp: OffsetDateTime,

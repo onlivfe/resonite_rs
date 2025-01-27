@@ -1,6 +1,9 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::{OffsetDateTime, serde::rfc3339};
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -14,6 +17,10 @@ pub struct Submission {
 	#[serde(default)]
 	/// The ID of the user that enabled featuring this submission
 	pub featured_by_user_id: Option<crate::id::User>,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde(rename = "featuredTimestamp")]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
@@ -24,6 +31,10 @@ pub struct Submission {
 	pub id: String,
 	/// The group that this submission is to
 	pub owner_id: crate::id::Group,
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+	)]
 	#[serde(with = "rfc3339")]
 	/// When the submission was created
 	pub submission_time: OffsetDateTime,

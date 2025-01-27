@@ -1,13 +1,20 @@
+#[cfg(feature = "nanoserde_bin")]
+use nanoserde::{DeBin, SerBin};
 use racal::Queryable;
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 use super::Authentication;
 
+#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 /// Query the messages for a specific user
 pub struct Messages {
+	#[cfg_attr(
+		feature = "nanoserde_bin",
+		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+	)]
 	#[serde_as(deserialize_as = "serde_with::DefaultOnNull")]
 	#[serde(default)]
 	#[serde(skip_serializing_if = "Option::is_none")]
