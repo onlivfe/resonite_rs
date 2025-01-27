@@ -21,13 +21,19 @@ const USER_AGENT: &str = concat!(
 fn main() {
 	// We really don't need to care about multithreading for this simple tool
 
+	use std::io::Write;
+
 	let rt = tokio::runtime::Builder::new_current_thread()
 		.enable_all()
 		.build()
 		.expect("Creating tokio runtime to work");
 
-	let user_session_file = File::create("local/user-session.json")
+	let user_session_serde_file = File::create("local/user-session.json")
 		.expect("Creating local/user-session.json file to work");
+
+	#[cfg(feature = "nanoserde_bin")]
+	let mut user_session_nanoserde_file = File::create("local/user-session.bin")
+		.expect("Creating local/user-session.bin file to work");
 
 	println!(
 		"This is a very simple helper tool to generate a `user-session.json` file for running the integration tests."
@@ -148,8 +154,21 @@ fn main() {
 	drop(rt);
 
 	println!("Login successful");
-	serde_json::to_writer_pretty(user_session_file, &user_session.user_session)
-		.expect("Writing user session to work");
+	serde_json::to_writer_pretty(
+		user_session_serde_file,
+		&user_session.user_session,
+	)
+	.expect("Writing user session json to work");
+
+	#[cfg(feature = "nanoserde_bin")]
+	{
+		use nanoserde::SerBin;
+		let mut s = Vec::new();
+		user_session.user_session.ser_bin(&mut s);
+		user_session_nanoserde_file
+			.write_all(&s)
+			.expect("Writing user session bin to work");
+	}
 
 	println!(
 		"Dumping config files not implemented, received: {:?}",

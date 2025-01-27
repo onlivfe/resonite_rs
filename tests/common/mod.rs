@@ -24,6 +24,26 @@ pub fn api_no_auth() -> UnauthenticatedResonite {
 }
 
 pub static USER_SESSION: LazyLock<UserSession> = LazyLock::new(|| {
+	#[cfg(feature = "nanoserde_bin")]
+	{
+		use nanoserde::DeBin;
+		match std::fs::read("local/user-session.bin") {
+			Ok(b) => match UserSession::deserialize_bin(&b) {
+				Ok(user_session) => {
+					assert!(!user_session.token.is_empty());
+					assert!(!user_session.user_id.as_ref().is_empty());
+					return user_session;
+				}
+				Err(e) => eprintln!(
+					"Error parsing `local/user-session.bin`, falling back to JSON; {e}"
+				),
+			},
+			Err(e) => {
+				eprintln!("Missing `local/user-session.bin`, falling back to JSON; {e}")
+			}
+		}
+	}
+
 	let user_session: UserSession =
 		serde_json::from_slice(&std::fs::read("local/user-session.json").expect(
 			"must have a prepared `local/user-session.json` file for live API testing",
