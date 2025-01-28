@@ -20,7 +20,7 @@ fn main() {
 
 	// We really don't need to care about multithreading for this simple tool
 	use nanoserde::{DeBin, SerBin};
-	use resonite::{api_client::ApiClient, model::SessionInfo, query};
+	use resonite::{api_client::ApiClient, query};
 
 	let rt = tokio::runtime::Builder::new_current_thread()
 		.enable_all()

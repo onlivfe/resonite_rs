@@ -79,7 +79,7 @@ pub mod nanoserde {
 	pub struct JsonValue(String);
 
 	impl From<&serde_json::Value> for JsonValue {
-		fn from(val: &serde_json::Value) -> Self { JsonValue(val.to_string()) }
+		fn from(val: &serde_json::Value) -> Self { Self(val.to_string()) }
 	}
 
 	impl From<&JsonValue> for serde_json::Value {
