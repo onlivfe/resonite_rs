@@ -19,6 +19,8 @@ use serde::{Deserialize, Serialize};
 )]
 /// The friendship status with a Resonite user
 pub enum ContactStatus {
+	/// Friends
+	Accepted = 1,
 	/// User has been blocked
 	Blocked = 4,
 	/// Ignored the friendship request
@@ -28,5 +30,5 @@ pub enum ContactStatus {
 	/// The user has requested friendship
 	Requested = 2,
 	/// Apparently possible value too..?
-	SearchResult = 1,
+	SearchResult = 5,
 }

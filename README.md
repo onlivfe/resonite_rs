@@ -11,6 +11,9 @@ Rust models of [Resonite's](https://resonite.com) API.
 Any official documentation of Resonite' API is lacking, and the API is still changing too.
 So this crate can't guarantee correctness.
 
+There's `serde` support for communicating with the API.
+There's also `nanoserde`'s `binary` format support.
+
 This crate provides an example API client with the optional `http_client` & `signalr_client` features.
 
 For programming style, beyond the clippy lints & rustfmt's automatic formatting:

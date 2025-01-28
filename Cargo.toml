@@ -26,6 +26,18 @@ path = "src/bin/auth-helper.rs"
 test = false
 bench = false
 
+[[bin]]
+name = "sessions-scraper"
+path = "src/bin/sessions-scraper.rs"
+test = false
+bench = false
+
+[[bin]]
+name = "bench"
+path = "src/bin/bench.rs"
+test = false
+bench = false
+
 [features]
 default = []
 http_client = ["tokio", "governor", "reqwest", "racal/reqwest", "async-trait"]

@@ -21,7 +21,7 @@ pub struct Messages {
 	/// If to only query messages that were sent after a certain time
 	pub from_time: Option<OffsetDateTime>,
 	/// Max amount of messages to retrieve,
-	/// most likely capped server side to a smaller value
+	/// seems to be server side capped to 100 as of writing.
 	pub max_amount: u16,
 	/// If to fetch only unread messages
 	pub unread_only: bool,
