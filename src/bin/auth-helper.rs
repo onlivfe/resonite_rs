@@ -31,8 +31,8 @@ fn main() {
 	let user_session_serde_file = File::create("local/user-session.json")
 		.expect("Creating local/user-session.json file to work");
 
-	#[cfg(feature = "nanoserde_bin")]
-	let mut user_session_nanoserde_file = File::create("local/user-session.bin")
+	#[cfg(feature = "borsh")]
+	let mut user_session_bin_file = File::create("local/user-session.bin")
 		.expect("Creating local/user-session.bin file to work");
 
 	println!(
@@ -160,12 +160,15 @@ fn main() {
 	)
 	.expect("Writing user session json to work");
 
-	#[cfg(feature = "nanoserde_bin")]
+	#[cfg(feature = "borsh")]
 	{
-		use nanoserde::SerBin;
+		use borsh::BorshSerialize;
 		let mut s = Vec::new();
-		user_session.user_session.ser_bin(&mut s);
-		user_session_nanoserde_file
+		user_session
+			.user_session
+			.serialize(&mut s)
+			.expect("serializing user session to bin to work");
+		user_session_bin_file
 			.write_all(&s)
 			.expect("Writing user session bin to work");
 	}

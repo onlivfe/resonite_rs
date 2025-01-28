@@ -1,9 +1,9 @@
 use std::fmt::Display;
 
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
-
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 /// An URI for a Resonite asset such as a profile picture.
 pub struct AssetUrl {

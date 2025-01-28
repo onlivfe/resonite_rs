@@ -1,11 +1,12 @@
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use racal::Queryable;
 use serde::{Deserialize, Serialize};
 
 use super::{Authenticating, Authentication};
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -20,7 +21,10 @@ pub struct UserSessionPasswordAuthentication {
 	pub recovery_code: Option<String>,
 }
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Authentication using a session token for an user session
@@ -30,7 +34,10 @@ pub struct UserSessionTokenAuthentication {
 }
 
 #[repr(u8)]
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(
 	Debug,
 	Clone,
@@ -65,7 +72,10 @@ impl From<UserSessionPasswordAuthentication> for UserSessionAuthentication {
 }
 
 #[repr(u8)]
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(
 	Debug,
 	Clone,
@@ -122,7 +132,10 @@ impl LoginCredentialsIdentifier {
 	pub const fn is_ownerid(&self) -> bool { matches!(self, Self::OwnerID(_)) }
 }
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// A login request body's data.

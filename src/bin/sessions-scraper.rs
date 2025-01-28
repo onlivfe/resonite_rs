@@ -1,10 +1,10 @@
-#[cfg(not(all(feature = "http_client", feature = "nanoserde_bin")))]
+#[cfg(not(all(feature = "http_client", feature = "borsh")))]
 fn main() {
-	println!("http_client and nanoserde_bin features required");
+	println!("http_client and borsh features required");
 	std::process::exit(2);
 }
 
-#[cfg(all(feature = "http_client", feature = "nanoserde_bin"))]
+#[cfg(all(feature = "http_client", feature = "borsh"))]
 const USER_AGENT: &str = concat!(
 	env!("CARGO_PKG_NAME"),
 	"-runner/",
@@ -14,12 +14,12 @@ const USER_AGENT: &str = concat!(
 	")",
 );
 
-#[cfg(all(feature = "http_client", feature = "nanoserde_bin"))]
+#[cfg(all(feature = "http_client", feature = "borsh"))]
 fn main() {
 	use std::hash::{DefaultHasher, Hash, Hasher};
 
+	use borsh::{BorshDeserialize, BorshSerialize};
 	// We really don't need to care about multithreading for this simple tool
-	use nanoserde::{DeBin, SerBin};
 	use resonite::{api_client::ApiClient, query};
 
 	let rt = tokio::runtime::Builder::new_current_thread()
@@ -30,7 +30,8 @@ fn main() {
 	let user_session = {
 		let bytes = std::fs::read("local/user-session.bin")
 			.expect("reading auth from `local/user-session.bin` to work");
-		resonite::model::UserSession::deserialize_bin(&bytes).expect("parsing auth")
+		let mut slice: &[u8] = bytes.as_slice();
+		resonite::model::UserSession::deserialize(&mut slice).expect("parsing auth")
 	};
 
 	let client = resonite::api_client::AuthenticatedResonite::new(
@@ -95,15 +96,21 @@ fn main() {
 		};
 
 		let mut buf = Vec::new();
-		d.ser_bin(&mut buf);
-		match std::fs::write(filename + ".bin", &buf) {
-			Ok(_) => {}
+		match d.serialize(&mut buf) {
+			Ok(_) => match std::fs::write(filename + ".bin", &buf) {
+				Ok(_) => {}
+				Err(e) => {
+					eprintln!("Failed writing sessions bin; {e}");
+					sleep_s *= 2;
+					continue;
+				}
+			},
 			Err(e) => {
-				eprintln!("Failed writing sessions bin; {e}");
+				eprintln!("Failed serializing sessions to bin; {e}");
 				sleep_s *= 2;
 				continue;
 			}
-		}
+		};
 
 		sleep_s = 15;
 	}

@@ -1,11 +1,12 @@
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 use super::ContactStatus;
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -34,8 +35,11 @@ pub struct Contact {
 	/// Defaults to false if missing
 	pub is_migrated: bool,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::optional_ser",
+			deserialize_with = "crate::util::borsh::time::optional_de"
+		)
 	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]

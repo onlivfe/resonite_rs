@@ -6,8 +6,6 @@
 // for easier navigation & better development experience.
 #![allow(clippy::module_name_repetitions)]
 
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use racal::FromApiState;
 use serde::{Deserialize, Serialize};
 
@@ -46,7 +44,10 @@ impl racal::FromApiState<Authentication> for NoAuthentication {
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
 /// With authentication
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 pub struct Authentication {
 	/// The secret authentication token
@@ -89,7 +90,10 @@ impl FromApiState<Self> for Authentication {
 ///
 /// Contains the data needed to actually request an user session.
 /// Mixes headers and actual body data together, not an actual Resonite model.
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[serde_with::serde_as]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 pub struct Authenticating {

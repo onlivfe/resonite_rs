@@ -1,11 +1,12 @@
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 use super::UserSessionType;
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -33,8 +34,11 @@ pub struct UserStatus {
 	/// If the user is present or not
 	pub is_present: bool,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::optional_ser",
+			deserialize_with = "crate::util::borsh::time::optional_de"
+		)
 	)]
 	#[serde(rename = "lastPresenceTimestamp")]
 	#[serde(default)]
@@ -43,8 +47,11 @@ pub struct UserStatus {
 	/// When the user was last present
 	pub last_presence_time: Option<OffsetDateTime>,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::optional_ser",
+			deserialize_with = "crate::util::borsh::time::optional_de"
+		)
 	)]
 	#[serde(rename = "lastStatusChange")]
 	#[serde(default)]

@@ -1,9 +1,11 @@
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 
 #[repr(u8)]
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
 #[derive(
 	Debug,
 	Clone,

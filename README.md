@@ -12,7 +12,13 @@ Any official documentation of Resonite' API is lacking, and the API is still cha
 So this crate can't guarantee correctness.
 
 There's `serde` support for communicating with the API.
-There's also `nanoserde`'s `binary` format support.
+
+There's also support to (de)serialize data to  a binary with [`borsh`](https://borsh.io/).
+This has the upsides of it include:
+
+- using less space
+- (de)serializing faster
+- not so directly tied to API implementation like serde, so trouble with field renames & such can be avoided
 
 This crate provides an example API client with the optional `http_client` & `signalr_client` features.
 

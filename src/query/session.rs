@@ -1,5 +1,3 @@
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use racal::Queryable;
 use serde::{Deserialize, Serialize};
 
@@ -15,7 +13,10 @@ impl Queryable<NoAuthentication, Vec<crate::model::SessionInfo>> for Sessions {
 }
 
 /// Gets details of publicly listed sessions
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct SessionInfo {
 	/// The ID of the session to query information about

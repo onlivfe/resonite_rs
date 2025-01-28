@@ -15,8 +15,6 @@
 //! Note that the IDs seem to be handled as case-sensitive, so any normalized
 //! versions are represented as strings instead of IDs.
 
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use serde::de::{self, Deserializer, Visitor};
 use serde::{Deserialize, Serialize};
 
@@ -36,7 +34,7 @@ macro_rules! add_id {
 		#[doc = concat!("let id2 = ", stringify!($name), "::try_from(\"", $prefix, "other-legit-id\").unwrap();")]
 		/// assert!(id1 != id2);
 		/// ```
-		#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+		#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
 		#[derive(Clone, Debug, PartialEq, Eq, Serialize, Hash)]
 		#[serde(transparent)]
 		$(#[$meta])*
@@ -130,7 +128,11 @@ impl Session {
 }
 
 #[repr(u8)]
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(untagged)]
 /// Any of the Resonite IDs
@@ -175,7 +177,11 @@ impl AsRef<str> for Any {
 }
 
 #[repr(u8)]
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(untagged)]
 /// Resonite IDs that can own records for example

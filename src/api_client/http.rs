@@ -7,8 +7,6 @@ use governor::{
 	middleware::NoOpMiddleware,
 	state::{InMemoryState, NotKeyed},
 };
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 pub use racal::reqwest::ApiClient;
 use reqwest::{
 	Client,
@@ -26,7 +24,10 @@ type NormalRateLimiter =
 /// Data needed to actually request an user session.
 ///
 /// Mixes headers and actual body data together, not an actual Resonite model.
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
 pub struct UserSessionQueryWithHeaders {
 	/// The actual body of the request

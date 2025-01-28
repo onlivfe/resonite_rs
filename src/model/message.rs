@@ -1,9 +1,10 @@
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::{OffsetDateTime, serde::rfc3339};
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// A message between two accounts
@@ -19,8 +20,11 @@ pub struct Message {
 	/// Defaults to false if missing
 	pub is_migrated: bool,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::ser",
+			deserialize_with = "crate::util::borsh::time::de"
+		)
 	)]
 	#[serde(with = "rfc3339")]
 	/// When the message was sent
@@ -28,8 +32,11 @@ pub struct Message {
 	/// The owner, so most likely the logged in user
 	pub owner_id: crate::id::User,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::optional_ser",
+			deserialize_with = "crate::util::borsh::time::optional_de"
+		)
 	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
@@ -39,8 +46,11 @@ pub struct Message {
 	/// If the user is focused on this session
 	pub recipient_id: crate::id::User,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::ser",
+			deserialize_with = "crate::util::borsh::time::de"
+		)
 	)]
 	#[serde(with = "rfc3339")]
 	/// When the message was sent
@@ -97,7 +107,11 @@ impl Message {
 }
 
 #[repr(u8)]
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
 #[serde_with::serde_as]
 #[allow(clippy::module_name_repetitions)]
 #[derive(

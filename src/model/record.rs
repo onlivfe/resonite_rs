@@ -1,11 +1,12 @@
 use std::collections::HashSet;
 
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::{OffsetDateTime, serde::rfc3339};
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[serde_with::serde_as]
 #[derive(Debug, PartialEq, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -19,8 +20,11 @@ pub struct Record {
 	/// The URI that this record points to
 	pub asset_uri: crate::AssetUrl,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::optional_ser",
+			deserialize_with = "crate::util::borsh::time::optional_de"
+		)
 	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
@@ -34,8 +38,11 @@ pub struct Record {
 	/// Defaults to an empty string if null/none in the API.
 	pub description: String,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::OptionalUtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::optional_ser",
+			deserialize_with = "crate::util::borsh::time::optional_de"
+		)
 	)]
 	#[serde(default)]
 	#[serde(with = "crate::util::opt_rfc3339")]
@@ -53,8 +60,11 @@ pub struct Record {
 	/// If the record is public or not
 	pub is_public: bool,
 	#[cfg_attr(
-		feature = "nanoserde_bin",
-		nserde(proxy = "crate::util::nanoserde::UtcTimestamp")
+		feature = "borsh",
+		borsh(
+			serialize_with = "crate::util::borsh::time::ser",
+			deserialize_with = "crate::util::borsh::time::de"
+		)
 	)]
 	#[serde(with = "rfc3339")]
 	/// When the record was last modified at
@@ -102,7 +112,10 @@ pub struct Record {
 	pub visits: u32,
 }
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 /// Versioning for a record

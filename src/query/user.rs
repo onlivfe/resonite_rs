@@ -1,5 +1,3 @@
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use racal::Queryable;
 use serde::{Deserialize, Serialize};
 
@@ -9,7 +7,10 @@ use super::NoAuthentication;
 ///
 /// Used in [`UserInfo`](resonite::query::UserInfo).
 #[repr(u8)]
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum UserIdOrUsername {
 	/// An user's ID
@@ -51,7 +52,10 @@ impl From<crate::id::User> for UserIdOrUsername {
 }
 
 /// Gets details of an user by either username or ID
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct UserInfo {
 	/// The ID or username to query information about
@@ -77,7 +81,10 @@ impl Queryable<NoAuthentication, crate::model::User> for UserInfo {
 }
 
 /// Searches users by name
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct UserSearch {
 	/// The name to search for

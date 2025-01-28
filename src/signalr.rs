@@ -6,15 +6,14 @@
 // Dunno
 #![allow(clippy::collection_is_never_read)]
 
-#[cfg(feature = "nanoserde_bin")]
-use nanoserde::{DeBin, SerBin};
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 // Modified version of code licensed under MIT from
 // https://github.com/yurivoronin/ngx-signalr-websocket/blob/ab6db75462e1a25306c2ffb821008649fd45d6e5/projects/ngx-signalr-websocket/src/lib/protocol.ts
 #[repr(u8)]
-//#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+//#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize,
+//#[cfg_attr(feature borsh::BorshDeserialize))]
 #[derive(
 	Debug,
 	Clone,
@@ -126,7 +125,10 @@ fn message_serde() {
 	assert_eq!(src, str);
 }
 
-#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 /// Invocation cancellation
 pub struct CancelInvocation {
@@ -134,7 +136,8 @@ pub struct CancelInvocation {
 	pub invocation_id: String,
 }
 
-//#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+//#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize,
+//#[cfg_attr(feature borsh::BorshDeserialize))]
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -153,7 +156,8 @@ pub struct Invocation {
 }
 
 #[repr(u8)]
-//#[cfg_attr(feature = "nanoserde_bin", derive(DeBin, SerBin))]
+//#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize,
+//#[cfg_attr(feature borsh::BorshDeserialize))]
 #[derive(
 	Debug,
 	Clone,

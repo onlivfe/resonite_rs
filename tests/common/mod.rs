@@ -24,20 +24,23 @@ pub fn api_no_auth() -> UnauthenticatedResonite {
 }
 
 pub static USER_SESSION: LazyLock<UserSession> = LazyLock::new(|| {
-	#[cfg(feature = "nanoserde_bin")]
+	#[cfg(feature = "borsh")]
 	{
-		use nanoserde::DeBin;
+		use borsh::BorshDeserialize;
 		match std::fs::read("local/user-session.bin") {
-			Ok(b) => match UserSession::deserialize_bin(&b) {
-				Ok(user_session) => {
-					assert!(!user_session.token.is_empty());
-					assert!(!user_session.user_id.as_ref().is_empty());
-					return user_session;
+			Ok(bytes) => {
+				let mut slice: &[u8] = bytes.as_slice();
+				match UserSession::deserialize(&mut slice) {
+					Ok(user_session) => {
+						assert!(!user_session.token.is_empty());
+						assert!(!user_session.user_id.as_ref().is_empty());
+						return user_session;
+					}
+					Err(e) => eprintln!(
+						"Error parsing `local/user-session.bin`, falling back to JSON; {e}"
+					),
 				}
-				Err(e) => eprintln!(
-					"Error parsing `local/user-session.bin`, falling back to JSON; {e}"
-				),
-			},
+			}
 			Err(e) => {
 				eprintln!("Missing `local/user-session.bin`, falling back to JSON; {e}")
 			}
