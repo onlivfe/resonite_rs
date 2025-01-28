@@ -116,7 +116,7 @@ impl UserSession {
 	feature = "borsh",
 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = true))]
 #[derive(
 	Debug,
 	Clone,
@@ -196,7 +196,7 @@ pub struct UserSessionResult {
 	feature = "borsh",
 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = true))]
 #[derive(
 	Debug,
 	Clone,

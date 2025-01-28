@@ -132,7 +132,7 @@ impl Session {
 	feature = "borsh",
 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = true))]
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(untagged)]
 /// Any of the Resonite IDs
@@ -181,7 +181,7 @@ impl AsRef<str> for Any {
 	feature = "borsh",
 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = true))]
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(untagged)]
 /// Resonite IDs that can own records for example

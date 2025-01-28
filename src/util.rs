@@ -386,5 +386,33 @@ pub mod borsh {
 				)),
 			}
 		}
+
+		/// Serializes a tuple with time as the second arg to it's UNIX timestamp
+		///
+		/// # Errors
+		///
+		/// If serialization fails
+		pub fn tuple_ser<W: borsh::io::Write, V: borsh::ser::BorshSerialize>(
+			obj: &(V, OffsetDateTime), writer: &mut W,
+		) -> Result<(), borsh::io::Error> {
+			obj.0.serialize(writer)?;
+			obj.1.unix_timestamp().serialize(writer)
+		}
+
+		/// Deserializes a tuple with time as the second arg from it's UNIX
+		/// timestamp
+		///
+		/// # Errors
+		///
+		/// If deserialization fails
+		pub fn tuple_de<R: borsh::io::Read, V: borsh::de::BorshDeserialize>(
+			reader: &mut R,
+		) -> Result<(V, OffsetDateTime), borsh::io::Error> {
+			let (v, t): (V, i64) = BorshDeserialize::deserialize_reader(reader)?;
+			let t = OffsetDateTime::from_unix_timestamp(t)
+				.map_err(|e| borsh::io::Error::other(std::io::Error::other(e)))?;
+
+			Ok((v, t))
+		}
 	}
 }

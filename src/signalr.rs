@@ -12,8 +12,11 @@ use time::OffsetDateTime;
 // Modified version of code licensed under MIT from
 // https://github.com/yurivoronin/ngx-signalr-websocket/blob/ab6db75462e1a25306c2ffb821008649fd45d6e5/projects/ngx-signalr-websocket/src/lib/protocol.ts
 #[repr(u8)]
-//#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize,
-//#[cfg_attr(feature borsh::BorshDeserialize))]
+// #[cfg_attr(
+// 	feature = "borsh",
+// 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+// )]
+// #[borsh(use_discriminant = true)]
 #[derive(
 	Debug,
 	Clone,
@@ -49,6 +52,13 @@ pub enum Message {
 		#[serde(rename = "type")]
 		/// A hack to force serde to have this as `"type":3`
 		num: VariantNumber<3>,
+		// #[cfg_attr(
+		// 	feature = "borsh",
+		// 	borsh(
+		// 		serialize_with = "crate::util::borsh::json::ser",
+		// 		deserialize_with = "crate::util::borsh::json::de"
+		// 	)
+		// )]
 		#[serde(flatten)]
 		/// The data for the invocation completion
 		data: serde_json::Value,
@@ -73,6 +83,13 @@ pub enum Message {
 		#[serde(rename = "type")]
 		/// A hack to force serde to have this as `"type":4`
 		num: VariantNumber<4>,
+		// #[cfg_attr(
+		// 	feature = "borsh",
+		// 	borsh(
+		// 		serialize_with = "crate::util::borsh::json::ser",
+		// 		deserialize_with = "crate::util::borsh::json::de"
+		// 	)
+		// )]
 		#[serde(flatten)]
 		/// The data for the stream invocation
 		data: serde_json::Value,
@@ -82,6 +99,13 @@ pub enum Message {
 		#[serde(rename = "type")]
 		/// A hack to force serde to have this as `"type":2`
 		num: VariantNumber<2>,
+		// #[cfg_attr(
+		// 	feature = "borsh",
+		// 	borsh(
+		// 		serialize_with = "crate::util::borsh::json::ser",
+		// 		deserialize_with = "crate::util::borsh::json::de"
+		// 	)
+		// )]
 		#[serde(flatten)]
 		/// The data for the stream item
 		data: serde_json::Value,
@@ -115,6 +139,32 @@ impl<'de, const V: u8> Deserialize<'de> for VariantNumber<V> {
 	}
 }
 
+#[cfg(feature = "borsh")]
+impl<const V: u8> borsh::BorshSerialize for VariantNumber<V> {
+	fn serialize<W: std::io::Write>(
+		&self, writer: &mut W,
+	) -> std::io::Result<()> {
+		let num: u8 = V;
+		borsh::BorshSerialize::serialize(&num, writer)
+	}
+}
+
+#[cfg(feature = "borsh")]
+impl<const V: u8> borsh::BorshDeserialize for VariantNumber<V> {
+	fn deserialize_reader<R: std::io::Read>(
+		reader: &mut R,
+	) -> std::io::Result<Self> {
+		let num: u8 = borsh::BorshDeserialize::deserialize_reader(reader)?;
+		if num == V {
+			Ok(Self)
+		} else {
+			Err(borsh::io::Error::other(std::io::Error::other(
+				"Wrong number: ".to_owned() + &num.to_string(),
+			)))
+		}
+	}
+}
+
 #[cfg(test)]
 #[test]
 fn message_serde() {
@@ -123,6 +173,20 @@ fn message_serde() {
 	assert_eq!(ping, Message::Ping { num: VariantNumber });
 	let str = serde_json::to_string(&ping).unwrap();
 	assert_eq!(src, str);
+}
+
+#[cfg(all(test, feature = "borsh"))]
+#[test]
+fn message_borsh() {
+	//let ping_msg = Message::Ping { num: VariantNumber };
+
+	//let mut buf = vec![];
+	//borsh::BorshSerialize::serialize(&ping_msg, &mut buf).unwrap();
+	//let mut slice = buf.as_slice();
+	//let roundtrip_msg: Message =
+	//	borsh::BorshDeserialize::deserialize(&mut slice).unwrap();
+
+	//assert_eq!(ping_msg, roundtrip_msg);
 }
 
 #[cfg_attr(
@@ -136,8 +200,10 @@ pub struct CancelInvocation {
 	pub invocation_id: String,
 }
 
-//#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize,
-//#[cfg_attr(feature borsh::BorshDeserialize))]
+// #[cfg_attr(
+// 	feature = "borsh",
+// 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+// )]
 #[serde_with::serde_as]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -156,8 +222,11 @@ pub struct Invocation {
 }
 
 #[repr(u8)]
-//#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize,
-//#[cfg_attr(feature borsh::BorshDeserialize))]
+// #[cfg_attr(
+// 	feature = "borsh",
+// 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+// )]
+// #[cfg_attr(feature = "borsh", borsh(use_discriminant = true))]
 #[derive(
 	Debug,
 	Clone,
@@ -178,8 +247,22 @@ pub enum InvocationData {
 	/// Data about a session update
 	ReceiveSessionUpdate((Box<crate::model::SessionInfo>,)),
 	/// Session removal data
+	// #[cfg_attr(
+	// 	feature = "borsh",
+	// 	borsh(
+	// 		serialize_with = "crate::util::borsh::json::tuple_ser",
+	// 		deserialize_with = "crate::util::borsh::json::tuple_de"
+	// 	)
+	// )]
 	RemoveSession((crate::id::Session, OffsetDateTime)),
 	/// Not yet supported or failed serde parsing of the invocation
+	// #[cfg_attr(
+	// 	feature = "borsh",
+	// 	borsh(
+	// 		serialize_with = "crate::util::borsh::json::ser",
+	// 		deserialize_with = "crate::util::borsh::json::de"
+	// 	)
+	// )]
 	#[serde(untagged)]
 	Unknown(serde_json::Value),
 }

@@ -7,7 +7,7 @@ use serde::de::{self, Deserialize, Deserializer, Visitor};
 	feature = "borsh",
 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = true))]
 #[derive(
 	Debug,
 	Clone,

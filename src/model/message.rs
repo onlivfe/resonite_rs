@@ -111,7 +111,7 @@ impl Message {
 	feature = "borsh",
 	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "borsh", borsh(use_discriminant = false))]
+#[cfg_attr(feature = "borsh", borsh(use_discriminant = true))]
 #[serde_with::serde_as]
 #[allow(clippy::module_name_repetitions)]
 #[derive(
