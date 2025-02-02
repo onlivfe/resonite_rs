@@ -27,6 +27,22 @@ pub use testing::*;
 pub use user::*;
 pub use user_session::*;
 
+/// Data needed to actually request an user session.
+///
+/// Mixes headers and actual body data together, not an actual Resonite model.
+#[cfg_attr(
+	feature = "borsh",
+	derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash, Deserialize, Serialize)]
+pub struct UserSessionQueryWithHeaders {
+	/// The actual body of the request
+	pub body: crate::query::UserSession,
+	#[serde(flatten)]
+	/// Headers & so on needed for authentication requests
+	pub data: Authenticating,
+}
+
 /// [`racal::Queryable`](racal::Queryable)'s `RequiredApiState`.
 ///
 /// Even unauthenticated requests to Resonite's API should take rate limits
